@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ConsoleApp1\MathAssignment.csproj" />
+    <ProjectReference Include="..\MathAssignment\MathAssignment.csproj" />
   </ItemGroup>
 
   <ItemGroup>
