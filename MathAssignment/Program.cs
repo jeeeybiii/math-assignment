@@ -61,74 +61,101 @@
 
         static void ProcessCommand(string userInput)
         {
-            bool calculationSuccessful = false;
-            double firstNumber, secondNumber;
-            string[] codeArray;
-            double result = 0;
-            Console.WriteLine($"Processing: {userInput}");
-            string cleanedInput = userInput
-                                    .Replace("+", " + ")
-                                    .Replace("-", " - ")
-                                    .Replace("*", " * ")
-                                    .Replace("/", " / ");
-            codeArray = cleanedInput.Split(' ',StringSplitOptions.RemoveEmptyEntries);
-            if(codeArray.Length != 3)
+            string compactInput = userInput.Replace(" ", "");
+
+            // Factorial route
+            if (compactInput.EndsWith('!'))
             {
-                Console.WriteLine("Invalid expression format.");
-            }
-            else if (double.TryParse(codeArray[0], out firstNumber) == false || double.TryParse(codeArray[2], out secondNumber) == false)
-            {
-                Console.WriteLine("Invalid number");
-            }
-            else 
-            {
-                switch (codeArray[1])
+                string factorialNumberText =
+                    compactInput.Substring(0, compactInput.Length - 1);
+
+                if (!int.TryParse(factorialNumberText, out int factorialNumber))
                 {
-                    case "+":
+                    Console.WriteLine("Factorial requires a whole number.");
+                    return;
+                }
 
-                        result = Add(firstNumber, secondNumber);
-                        calculationSuccessful = true;
-                        break;
-                    case "-":
+                if (factorialNumber < 0)
+                {
+                    Console.WriteLine("Factorial cannot use a negative number.");
+                    return;
+                }
 
-                        result = Subtract(firstNumber, secondNumber);
-                        calculationSuccessful = true;
-                        break;
-                    case "*":
+                // Temporary output until factorial calculation is implemented.
+                Console.WriteLine($"Factorial number: {factorialNumber}");
+                return;
+            }
 
-                        result = Multiply(firstNumber, secondNumber);
-                        calculationSuccessful = true;
-                        break;
-                    case "/":
-                        if (secondNumber == 0)
-                        {
-                            Console.WriteLine("Cannot divide by 0!");
-                        }
-                        else
-                        {
+            // Normal arithmetic route
+            int operatorPosition = -1;
 
-                            result = Divide(firstNumber, secondNumber);
-                            calculationSuccessful = true;
-                        }
-                        break;
-                    default:
-                        Console.WriteLine("Unknown operator");
-                        break;
+            // Start at 1 because position 0 could be a negative sign.
+            for (int i = 1; i < compactInput.Length; i++)
+            {
+                if (compactInput[i] == '+' ||
+                    compactInput[i] == '-' ||
+                    compactInput[i] == '*' ||
+                    compactInput[i] == '/')
+                {
+                    operatorPosition = i;
+                    break;
                 }
             }
-            if(calculationSuccessful == true)
+
+            if (operatorPosition == -1)
             {
-                Console.WriteLine(result);
+                Console.WriteLine("No operator found.");
+                return;
             }
-            /*foreach(string parts in codeArray)
+
+            string firstNumberText =
+                compactInput.Substring(0, operatorPosition);
+
+            char operatorCharacter =
+                compactInput[operatorPosition];
+
+            string secondNumberText =
+                compactInput.Substring(operatorPosition + 1);
+
+            if (!double.TryParse(firstNumberText, out double firstNumber) ||
+                !double.TryParse(secondNumberText, out double secondNumber))
             {
-                if (codeArray[0].ToLower() == "vec")
-                {
-                    isRecognised = true;
-                    Console.WriteLine("Create vector command recognised");
-                }
+                Console.WriteLine("Invalid number.");
+                return;
             }
-            */
+
+            double result;
+
+            switch (operatorCharacter)
+            {
+                case '+':
+                    result = Add(firstNumber, secondNumber);
+                    break;
+
+                case '-':
+                    result = Subtract(firstNumber, secondNumber);
+                    break;
+
+                case '*':
+                    result = Multiply(firstNumber, secondNumber);
+                    break;
+
+                case '/':
+                    if (secondNumber == 0)
+                    {
+                        Console.WriteLine("Cannot divide by zero.");
+                        return;
+                    }
+
+                    result = Divide(firstNumber, secondNumber);
+                    break;
+
+                default:
+                    Console.WriteLine("Unknown operator.");
+                    return;
+            }
+
+            Console.WriteLine(result);
         }
         static double Add(double firstNumber, double secondNumber)
         {
