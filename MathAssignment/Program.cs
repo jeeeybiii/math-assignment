@@ -5,7 +5,6 @@
         static void Main(string[] args)
         {
             MainMenu();
-            Console.ReadLine();
         }
 
         static void MainMenu()
@@ -61,120 +60,62 @@
 
         static void ProcessCommand(string userInput)
         {
-            string compactInput = userInput.Replace(" ", "");
+            //initialize variables
+            int total = 0, currentTerm = 0;
+            string[] codeArray = userInput.Split(' ', '\t', StringSplitOptions.RemoveEmptyEntries);
+            bool numberValidation = false, operatorValidation = false;
+            Console.WriteLine($"Processing: {userInput}");
 
-            // Factorial route
-            if (compactInput.EndsWith('!'))
+            if(codeArray.Length < 3)
             {
-                string factorialNumberText =
-                    compactInput.Substring(0, compactInput.Length - 1);
-
-                if (!int.TryParse(factorialNumberText, out int factorialNumber))
-                {
-                    Console.WriteLine("Factorial requires a whole number.");
-                    return;
-                }
-
-                if (factorialNumber < 0)
-                {
-                    Console.WriteLine("Factorial cannot use a negative number.");
-                    return;
-                }
-
-                // Temporary output until factorial calculation is implemented.
-                Console.WriteLine($"Factorial number: {factorialNumber}");
+                Console.WriteLine("Expression is too short");
+                return;
+            }
+            if(codeArray.Length % 2 == 0)
+            {
+                Console.WriteLine("Invalid expression format");
                 return;
             }
 
-            // Normal arithmetic route
-            int operatorPosition = -1;
-
-            // Start at 1 because position 0 could be a negative sign.
-            for (int i = 1; i < compactInput.Length; i++)
+            for (int i = 0; i < codeArray.Length; i++)
             {
-                if (compactInput[i] == '+' ||
-                    compactInput[i] == '-' ||
-                    compactInput[i] == '*' ||
-                    compactInput[i] == '/')
+                if(i % 2 == 0)
                 {
-                    operatorPosition = i;
-                    break;
-                }
-            }
-
-            if (operatorPosition == -1)
-            {
-                Console.WriteLine("No operator found.");
-                return;
-            }
-
-            string firstNumberText =
-                compactInput.Substring(0, operatorPosition);
-
-            char operatorCharacter =
-                compactInput[operatorPosition];
-
-            string secondNumberText =
-                compactInput.Substring(operatorPosition + 1);
-
-            if (!double.TryParse(firstNumberText, out double firstNumber) ||
-                !double.TryParse(secondNumberText, out double secondNumber))
-            {
-                Console.WriteLine("Invalid number.");
-                return;
-            }
-
-            double result;
-
-            switch (operatorCharacter)
-            {
-                case '+':
-                    result = Add(firstNumber, secondNumber);
-                    break;
-
-                case '-':
-                    result = Subtract(firstNumber, secondNumber);
-                    break;
-
-                case '*':
-                    result = Multiply(firstNumber, secondNumber);
-                    break;
-
-                case '/':
-                    if (secondNumber == 0)
+                    if (double.TryParse(codeArray[i], out double tempCatcher) == true)
                     {
-                        Console.WriteLine("Cannot divide by zero.");
+                        Console.WriteLine($"Parsed value: {tempCatcher}");
+                        numberValidation = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Invalid number: {codeArray[i]}");
                         return;
                     }
-
-                    result = Divide(firstNumber, secondNumber);
-                    break;
-
-                default:
-                    Console.WriteLine("Unknown operator.");
-                    return;
+                }
+                else
+                {
+                    if (codeArray[i] != "+" &&
+                        codeArray[i] != "-" &&
+                        codeArray[i] != "*" &&
+                        codeArray[i] != "/")
+                    {
+                        Console.WriteLine("Invalid operator!");
+                        return;
+                    }
+                    else
+                    {
+                        operatorValidation = true;
+                    }
+                }
             }
 
-            Console.WriteLine(result);
-        }
-        static double Add(double firstNumber, double secondNumber)
-        {
-            return firstNumber + secondNumber;
+
+            if(numberValidation == true && operatorValidation == true)
+            {
+                Console.WriteLine("Expression accepted.");
+
+            }
         }
 
-        static double Subtract(double firstNumber, double secondNumber)
-        {
-            return firstNumber - secondNumber;
-        }
-
-        static double Multiply(double firstNumber, double secondNumber)
-        {
-            return firstNumber * secondNumber;
-        }
-
-        static double Divide(double firstNumber, double secondNumber)
-        {
-            return firstNumber / secondNumber;
-        }
     }
 }
