@@ -58,24 +58,97 @@
             Console.WriteLine("exit - Close the calculator");
         }
 
+
+        //if there's parentheses
+        static void CalculateParenthesesExpression(string userInput)
+        {
+            int openingCount = 0, closingCount = 0;
+            int openingPosition = 0, closingPosition = 0;
+            int innerPosition = 0, innerLength = 0;
+            string innerExpression;
+
+            //validate matching parentheses
+            for (int i = 0; i < userInput.Length; i++)
+            {
+                if (userInput[i].Equals('('))
+                {
+                    openingCount++;
+                }
+                else if (userInput[i].Equals(')'))
+                {
+                    closingCount++;
+                }
+            }
+
+            if (openingCount != closingCount)
+            {
+                Console.WriteLine("Mismatched parentheses");
+                return;
+            }
+
+            while (userInput.Contains('('))
+            {
+                openingPosition = userInput.LastIndexOf('(');
+                closingPosition = userInput.IndexOf(')', openingPosition + 1);
+
+
+
+                if (closingPosition == -1)
+                {
+                    Console.WriteLine("Parentheses are in the wrong order");
+                    return;
+                }
+
+                innerPosition = openingPosition + 1;
+                innerLength = closingPosition - openingPosition - 1;
+
+                innerExpression = userInput.Substring(openingPosition + 1, innerLength);
+                innerExpression = innerExpression.Trim();
+
+
+                if (CalculateExpression(innerExpression, out double innerResult) == false)
+                {
+                    return;
+                }
+
+                string beforeParentheses = userInput.Substring(0, openingPosition);
+                string afterParentheses = userInput.Substring(closingPosition + 1);
+                userInput = beforeParentheses + innerResult + afterParentheses;
+            }
+
+            if (double.TryParse(userInput.Trim(), out double finalNumber))
+            {
+                Console.WriteLine(finalNumber);
+            }
+            else
+            {
+                if (CalculateExpression(userInput, out double finalResult))
+                {
+                    Console.WriteLine(finalResult);
+                }
+            }
+
+
+        }
+
         //BEDMAS
-        static void CalculateExpression(string userInput)
+        static bool CalculateExpression(string userInput, out double result)
         {
             //initialize variables
-            double total = 0, currentTerm = 0, nextNumber = 0, result = 0;
+            result = 0;
+            double total = 0, currentTerm = 0, nextNumber = 0;
             string[] codeArray = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             string operatorSign;
-            Console.WriteLine($"Processing: {userInput}");
 
             if (codeArray.Length < 3)
             {
                 Console.WriteLine("Expression is too short");
-                return;
+                return false;
             }
             if (codeArray.Length % 2 == 0)
             {
                 Console.WriteLine("Invalid expression format");
-                return;
+                return false;
             }
 
             //validate expression
@@ -89,7 +162,7 @@
                     else
                     {
                         Console.WriteLine($"Invalid number: {codeArray[i]}");
-                        return;
+                        return false;
                     }
                 }
                 else
@@ -100,7 +173,7 @@
                         codeArray[i] != "/")
                     {
                         Console.WriteLine("Invalid operator!");
-                        return;
+                        return false;
                     }
                 }
             }
@@ -121,7 +194,7 @@
                         if (nextNumber == 0)
                         {
                             Console.WriteLine("Cannot divide by 0!");
-                            return;
+                            return false;
                         }
                         currentTerm = currentTerm / nextNumber;
                         break;
@@ -136,7 +209,7 @@
                 }
             }
             result = total + currentTerm;
-            Console.WriteLine(result);
+            return true;
         }
 
         //Factorial
@@ -229,27 +302,38 @@
             Console.WriteLine(squareRootResult);
         }
 
+       
         //Process the calculator
         static void ProcessCommand(string userInput)
         {
-            if (userInput.EndsWith("!"))
+            if(userInput.Contains("(") || userInput.Contains(")"))
             {
-                CalculateFactorial(userInput);
-            }
-            else if (userInput.StartsWith("square "))
-            {
-                CalculateSquare(userInput);
-            }
-            else if(userInput.StartsWith("sqrt "))
-            {
-                CalculateSquareRoot(userInput);
+                CalculateParenthesesExpression(userInput);
             }
             else
             {
-                CalculateExpression(userInput);
-            }
- 
+                if (userInput.EndsWith("!"))
+                {
+                    CalculateFactorial(userInput);
+                }
+                else if (userInput.StartsWith("square "))
+                {
+                    CalculateSquare(userInput);
+                }
+                else if (userInput.StartsWith("sqrt "))
+                {
+                    CalculateSquareRoot(userInput);
+                }
+                else
+                {
+                    bool answer = CalculateExpression(userInput, out double result);
+                    if(answer == true)
+                    {
+                        Console.WriteLine(result);
+                    }
+                }
 
+            }
         }
 
     }
