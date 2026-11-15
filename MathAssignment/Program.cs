@@ -1,5 +1,7 @@
 ﻿//John Vincent L. Macuto & Akirah Quinto's Digital Numeracy Assignment
 
+using System.Runtime.ConstrainedExecution;
+
 namespace MathAssignment
 {
     public class Program
@@ -22,6 +24,16 @@ namespace MathAssignment
             public double vectorY;
         }
 
+        //matrix struct
+        public struct MatrixData
+        {
+            public string matrixName;
+            public double topLeft;
+            public double topRight;
+            public double bottomLeft;
+            public double bottomRight;
+        }
+
         //geometry data
         public static LineData[] lineData = new LineData[50]; 
 
@@ -30,6 +42,11 @@ namespace MathAssignment
         //vector data
         public static VectorData[] vectorData = new VectorData[50];
         public static int vectorCounter = 0;
+
+
+        //matric data
+        public static MatrixData[] matrixData = new MatrixData[50];
+        public static int matrixCounter = 0;
         static void Main(string[] args)
         {
             MainMenu();
@@ -566,6 +583,42 @@ namespace MathAssignment
             Console.WriteLine(radians);
         }
 
+        static void CalculateVectorLength(string userInput)
+        {
+            string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
+            string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            
+            if (codeArray.Length != 2)
+            {
+                Console.WriteLine("USE: lengthvec vectorName");
+                return;
+            }
+
+            string newVectorName = codeArray[1];
+            int vectorIndex = -1;
+
+            for (int i = 0; i < vectorCounter; i++)
+            {
+                if (vectorData[i].vectorName == newVectorName)
+                {
+                    vectorIndex = i;
+                    break;
+                }
+            }
+
+            if(vectorIndex == -1)
+            {
+                Console.WriteLine("Vector not found");
+                return;
+            }
+
+            double vectorX = vectorData[vectorIndex].vectorX;
+            double vectorY = vectorData[vectorIndex].vectorY;
+
+            double length = Math.Sqrt((vectorX * vectorX) +(vectorY * vectorY));
+            Console.WriteLine($"Length of {newVectorName} = {length}");
+        }
+
         //GEOMETRY COMMANDS END
 
         //VECTOR COMMANDS START
@@ -779,6 +832,18 @@ namespace MathAssignment
             Console.WriteLine($"{vectorData[firstVectorIndex].vectorName} * {vectorData[secondVectorIndex].vectorName} = {resultX} + {resultY}");
             Console.WriteLine($"{vectorData[firstVectorIndex].vectorName} * {vectorData[secondVectorIndex].vectorName} = {dotProduct}");
 
+            if(dotProduct > 0)
+            {
+                Console.WriteLine("The vectors point in a similar general direction.");
+            }
+            else if(dotProduct == 0)
+            {
+                Console.WriteLine("The vectors are perpendicular.");
+            }
+            else
+            {
+                Console.WriteLine("The vectors point in opposite general directions.");
+            }
         }
 
         //scalar multiplication
@@ -1080,10 +1145,336 @@ namespace MathAssignment
             }
         }
 
+        static void CreateMatrix(string userInput)
+        {
+            string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
+            string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (codeArray.Length != 6)
+            {
+                Console.WriteLine("USE: mat name (a b c d)");
+                return;
+            }
+
+            if(matrixCounter >= matrixData.Length)
+            {
+                Console.WriteLine("Matrix storage is full");
+                return;
+            }
+
+            string newMatrixName = codeArray[1];
+
+            for(int i = 0; i < matrixCounter; i++)
+            {
+                if (matrixData[i].matrixName == newMatrixName)
+                {
+                    Console.WriteLine("Matrix name already exists!");
+                    return;
+                }
+            }
+
+            if (double.TryParse(codeArray[2], out double topLeft) == false)
+            {
+                Console.WriteLine("All matrix elements must be valid numbers.");
+                return;
+            }
+            if (double.TryParse(codeArray[3], out double topRight) == false)
+            {
+                Console.WriteLine("All matrix elements must be valid numbers.");
+                return;
+            }
+            if (double.TryParse(codeArray[4], out double bottomLeft) == false)
+            {
+                Console.WriteLine("All matrix elements must be valid numbers.");
+                return;
+            }
+            if (double.TryParse(codeArray[5], out double bottomRight) == false)
+            {
+                Console.WriteLine("All matrix elements must be valid numbers.");
+                return;
+            }
+
+            matrixData[matrixCounter].matrixName = newMatrixName;
+            matrixData[matrixCounter].topLeft = topLeft;
+            matrixData[matrixCounter].topRight = topRight;
+            matrixData[matrixCounter].bottomLeft = bottomLeft;
+            matrixData[matrixCounter].bottomRight = bottomRight;
+
+            Console.WriteLine($"Matrix {newMatrixName} created:");
+            Console.WriteLine($"[{topLeft} {topRight}]");
+            Console.WriteLine($"[{bottomLeft} {bottomRight}]");
+            matrixCounter++;
+        }
+
+        static void AddMatrices(string userInput)
+        {
+            string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
+            string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if(codeArray.Length != 3)
+            {
+                Console.WriteLine("USE: addmat firstMatrix secondMatrix");
+                return;
+            }
+
+            string firstMatrixName = codeArray[1];
+            string secondMatrixName = codeArray[2];
+
+            int firstMatrixIndex = -1;
+            int secondMatrixIndex = -1;
+
+            for (int i = 0; i < matrixCounter; i++)
+            {
+                if (matrixData[i].matrixName == firstMatrixName)
+                {
+                    firstMatrixIndex = i;
+                }
+
+                if (matrixData[i].matrixName == secondMatrixName)
+                {
+                    secondMatrixIndex = i;
+                }
+            }
+
+            if (firstMatrixIndex == -1)
+            {
+                Console.WriteLine($"{firstMatrixName} was not found.");
+                return;
+            }
+            if (secondMatrixIndex == -1)
+            {
+                Console.WriteLine($"{secondMatrixName} was not found.");
+                return;
+            }
+
+            double resultTopLeft = matrixData[firstMatrixIndex].topLeft + matrixData[secondMatrixIndex].topLeft;
+            double resultTopRight = matrixData[firstMatrixIndex].topRight + matrixData[secondMatrixIndex].topRight;
+            double resultBottomLeft = matrixData[firstMatrixIndex].bottomLeft + matrixData[secondMatrixIndex].bottomLeft;
+            double resultBottomRight = matrixData[firstMatrixIndex].bottomRight + matrixData[secondMatrixIndex].bottomRight;
+            
+            //initial result
+            Console.WriteLine($"{matrixData[firstMatrixIndex].matrixName} + {matrixData[secondMatrixIndex].matrixName} = ");
+            Console.Write($"[{matrixData[firstMatrixIndex].topLeft} + {matrixData[secondMatrixIndex].topLeft}  ");
+            Console.WriteLine($"{matrixData[firstMatrixIndex].topRight} + {matrixData[secondMatrixIndex].topRight}]");
+            Console.Write($"[{matrixData[firstMatrixIndex].bottomLeft} + {matrixData[secondMatrixIndex].bottomLeft}  ");
+            Console.WriteLine($"{matrixData[firstMatrixIndex].bottomRight} + {matrixData[secondMatrixIndex].bottomRight}]");
+
+            //final output
+            Console.WriteLine($"\n{matrixData[firstMatrixIndex].matrixName} + {matrixData[secondMatrixIndex].matrixName} = ");
+            Console.WriteLine($"[{resultTopLeft} {resultTopRight}]");
+            Console.WriteLine($"[{resultBottomLeft} {resultBottomRight}]");
+        }
+
+        static void ScaleMatrix(string userInput)
+        {
+            string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
+            string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (codeArray.Length != 3)
+            {
+                Console.WriteLine("USE: scalmat scalar matrixName");
+                return;
+            }
+
+            double scalar = 0;
+            if (double.TryParse(codeArray[1], out scalar) == false)
+            {
+                Console.WriteLine("Scalar must be a valid number");
+                return;
+            }
+
+            int matrixIndex = -1;
+            string matrixName = codeArray[2];
+            for(int i = 0; i < matrixCounter; i++)
+            {
+                if (matrixData[i].matrixName == matrixName)
+                {
+                    matrixIndex = i;
+                }
+            }
+
+            if(matrixIndex == -1)
+            {
+                Console.WriteLine("Matrix not found");
+                return;
+            }
+
+            double resultTopLeft = matrixData[matrixIndex].topLeft * scalar;
+            double resultTopRight= matrixData[matrixIndex].topRight * scalar;
+            double resultBottomLeft = matrixData[matrixIndex].bottomLeft * scalar;
+            double resultBottomRight = matrixData[matrixIndex].bottomRight * scalar;
+
+            //initial result
+            Console.WriteLine($"{matrixName}{scalar} = ");
+            Console.WriteLine($"[{matrixData[matrixIndex].topLeft}({scalar})   {matrixData[matrixIndex].topRight}({scalar})]");
+            Console.WriteLine($"[{matrixData[matrixIndex].bottomLeft}({scalar})   {matrixData[matrixIndex].bottomRight}({scalar})]");
+
+            //final result
+            Console.WriteLine($"{matrixName}{scalar} = ");
+            Console.WriteLine($"[{resultTopLeft} {resultTopRight}]");
+            Console.WriteLine($"[{resultBottomLeft} {resultBottomRight}]");
+        }
+
+        static void CalculateDeterminant(string userInput)
+        {
+            string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
+            string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (codeArray.Length != 2)
+            {
+                Console.WriteLine("USE: detmat matrixName");
+                return;
+            }
+
+            int matrixIndex = -1;
+            string matrixName = codeArray[1];
+            for (int i = 0; i < matrixCounter; i++)
+            {
+                if (matrixData[i].matrixName == matrixName)
+                {
+                    matrixIndex = i;
+                }
+            }
+
+            if (matrixIndex == -1)
+            {
+                Console.WriteLine("Matrix not found");
+                return;
+            }
+
+            double determinant = (matrixData[matrixIndex].topLeft * matrixData[matrixIndex].bottomRight)
+                                - (matrixData[matrixIndex].topRight * matrixData[matrixIndex].bottomLeft);
+
+            Console.WriteLine($"det({matrixName}) = {determinant}");
+        }
+
+        static void MultiplyMatrices(string userInput)
+        {
+            string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
+            string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (codeArray.Length != 3)
+            {
+                Console.WriteLine("USE: dotmat firstMatrix secondMatrix");
+                return;
+            }
+
+            string firstMatrixName = codeArray[1];
+            string secondMatrixName = codeArray[2];
+
+            int firstMatrixIndex = -1;
+            int secondMatrixIndex = -1;
+
+            for (int i = 0; i < matrixCounter; i++)
+            {
+                if (matrixData[i].matrixName == firstMatrixName)
+                {
+                    firstMatrixIndex = i;
+                }
+
+                if (matrixData[i].matrixName == secondMatrixName)
+                {
+                    secondMatrixIndex = i;
+                }
+            }
+
+            if (firstMatrixIndex == -1)
+            {
+                Console.WriteLine($"{firstMatrixName} was not found.");
+                return;
+            }
+            if (secondMatrixIndex == -1)
+            {
+                Console.WriteLine($"{secondMatrixName} was not found.");
+                return;
+            }
+
+            double resultTopLeft = (matrixData[firstMatrixIndex].topLeft * matrixData[secondMatrixIndex].topLeft) + (matrixData[firstMatrixIndex].topRight * matrixData[secondMatrixIndex].bottomLeft);
+            double resultTopRight = (matrixData[firstMatrixIndex].topLeft * matrixData[secondMatrixIndex].topRight) + (matrixData[firstMatrixIndex].topRight * matrixData[secondMatrixIndex].bottomRight);
+            double resultBottomLeft = (matrixData[firstMatrixIndex].bottomLeft * matrixData[secondMatrixIndex].topLeft) + (matrixData[firstMatrixIndex].bottomRight * matrixData[secondMatrixIndex].bottomLeft);
+            double resultBottomRight = (matrixData[firstMatrixIndex].bottomLeft * matrixData[secondMatrixIndex].topRight) + (matrixData[firstMatrixIndex].bottomRight * matrixData[secondMatrixIndex].bottomRight);
+
+            //final output
+            Console.WriteLine($"\n{matrixData[firstMatrixIndex].matrixName} * {matrixData[secondMatrixIndex].matrixName} = ");
+            Console.WriteLine($"[{resultTopLeft} {resultTopRight}]");
+            Console.WriteLine($"[{resultBottomLeft} {resultBottomRight}]");
+        }
+
+        static void CalculateInverse(string userInput)
+        {
+            string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
+            string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (codeArray.Length != 2)
+            {
+                Console.WriteLine("USE: invmat matrixName");
+                return;
+            }
+
+            int matrixIndex = -1;
+            string matrixName = codeArray[1];
+            for (int i = 0; i < matrixCounter; i++)
+            {
+                if (matrixData[i].matrixName == matrixName)
+                {
+                    matrixIndex = i;
+                }
+            }
+
+            if (matrixIndex == -1)
+            {
+                Console.WriteLine("Matrix not found");
+                return;
+            }
+
+            double determinant = (matrixData[matrixIndex].topLeft * matrixData[matrixIndex].bottomRight)
+                                - (matrixData[matrixIndex].topRight * matrixData[matrixIndex].bottomLeft);
+
+            if(determinant == 0)
+            {
+                Console.WriteLine("This matrix has no inverse");
+                return;
+            }
+            Console.WriteLine($"det({matrixName}) = {determinant}");
+
+            double inverseTopLeft = matrixData[matrixIndex].bottomRight / determinant;
+            double inverseTopRight = -matrixData[matrixIndex].topRight / determinant;
+            double inverseBottomLeft = -matrixData[matrixIndex].bottomLeft / determinant;
+            double inverseBottomRight = matrixData[matrixIndex].topLeft / determinant;
+
+            Console.WriteLine($"Inverse of matrix {matrixName} = ");
+            Console.WriteLine($"[{inverseTopLeft} {inverseTopRight}]");
+            Console.WriteLine($"[{inverseBottomLeft} {inverseBottomRight}]");
+        }
+
         //Process the calculator
         static void ProcessCommand(string userInput)
         {
-            if(userInput.StartsWith("numrand "))
+            if (userInput.StartsWith("invmat "))
+            {
+                CalculateInverse(userInput);
+            }
+            else if (userInput.StartsWith("dotmat "))
+            {
+                MultiplyMatrices(userInput);
+            }
+            else if(userInput.StartsWith("detmat "))
+            {
+                CalculateDeterminant(userInput);
+            }
+            else if (userInput.StartsWith("scalmat "))
+            {
+                ScaleMatrix(userInput);
+            }
+            else if(userInput.StartsWith("addmat "))
+            {
+                AddMatrices(userInput);
+            }
+            else if (userInput.StartsWith("mat "))
+            {
+                CreateMatrix(userInput);
+            }
+            else if(userInput.StartsWith("numrand "))
             {
                 GenerateRandomNumber(userInput);
             }
@@ -1118,6 +1509,10 @@ namespace MathAssignment
             else if (userInput.StartsWith("vec "))
             {
                 CreateVector(userInput);
+            }
+            else if (userInput.StartsWith("lengthvec "))
+            {
+                CalculateVectorLength(userInput);
             }
             else if (userInput.StartsWith("deg2rad "))
             {
