@@ -1,4 +1,6 @@
-﻿namespace MathAssignment
+﻿//John Vincent L. Macuto & Akirah Quinto's Digital Numeracy Assignment
+
+namespace MathAssignment
 {
     public class Program
     {
@@ -11,13 +13,29 @@
             public double x2;
             public double y2;
         }
+
+        //vector struct
+        public struct VectorData
+        {
+            public string vectorName;
+            public double vectorX;
+            public double vectorY;
+        }
+
+        //geometry data
         public static LineData[] lineData = new LineData[50]; 
+
         public static int lineCounter = 0;
+
+        //vector data
+        public static VectorData[] vectorData = new VectorData[50];
+        public static int vectorCounter = 0;
         static void Main(string[] args)
         {
             MainMenu();
         }
 
+        //main menu commands
         static void MainMenu()
         {
             bool isRunning = true;
@@ -61,6 +79,8 @@
             Console.WriteLine("Calculator closed.");
         }
 
+
+        //menu to display commands
         static void DisplayHelp()
         {
             Console.Clear();
@@ -223,6 +243,7 @@
             return true;
         }
 
+
         //Factorial
         static void CalculateFactorial(string userInput)
         {
@@ -314,6 +335,7 @@
         }
 
         //geometry
+        //create a line
         static void CreateLine(string userInput)
         {
             bool checker = true;
@@ -378,6 +400,8 @@
             lineCounter++;
 
         }
+
+        //calculate length of a line
         static void CalculateLineLength(string userInput)
         {
             string targetName;
@@ -415,7 +439,7 @@
             Console.WriteLine($"Length of line {lineData[foundIndex].lineName}: {length}");
         }
 
-        //midpoint
+        //midpoint of a line
         static void CalculateMidpoint(string userInput)
         {
             string targetName;
@@ -541,10 +565,292 @@
 
             Console.WriteLine(radians);
         }
+
+        //GEOMETRY COMMANDS END
+
+        //VECTOR COMMANDS START
+        //Create a vector
+
+        static void CreateVector(string userInput)
+        {
+            bool checker = true;
+            string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
+            string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (codeArray.Length != 4)
+            {
+                Console.WriteLine("USE: vec name (firstNumber, secondNumber)");
+                return;
+            }
+
+            if (vectorCounter >= vectorData.Length)
+            {
+                Console.WriteLine("Vector storage is full");
+                return;
+            }
+
+
+            string newVectorName = codeArray[1];
+            for (int i = 0; i < vectorCounter; i++)
+            {
+                if (vectorData[i].vectorName == newVectorName)
+                {
+                    Console.WriteLine("Vector name already exists!");
+                    return;
+                }
+            }
+
+            if (double.TryParse(codeArray[2], out double vectorX) == false)
+            {
+                checker = false;
+            }
+            if (double.TryParse(codeArray[3], out double vectorY) == false)
+            {
+                checker = false;
+            }
+
+            if (checker == false)
+            {
+                Console.WriteLine("All vectors must be valid numbers!");
+                return;
+            }
+            else
+            {
+                vectorData[vectorCounter].vectorName = newVectorName;
+                vectorData[vectorCounter].vectorX = vectorX;
+                vectorData[vectorCounter].vectorY = vectorY;
+            }
+
+            Console.WriteLine($"Vector {vectorData[vectorCounter].vectorName} created: ({vectorX}, {vectorY})");
+            vectorCounter++;
+        }
+
+
+        //Add vectors
+        static void AddVectors(string userInput)
+        {
+            string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
+            string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if(codeArray.Length != 3)
+            {
+                Console.WriteLine("USE: addvec firstVector secondVector");
+                return;
+            }
+
+            string firstVectorName = codeArray[1];
+            string secondVectorName = codeArray[2];
+
+            int firstVectorIndex = -1;
+            int secondVectorIndex = -1;
+
+            for(int i = 0; i < vectorCounter; i++)
+            {
+                if (vectorData[i].vectorName == firstVectorName)
+                {
+                    firstVectorIndex = i;
+                }
+
+                if (vectorData[i].vectorName == secondVectorName)
+                {
+                    secondVectorIndex = i;
+                }
+            }
+
+            if(firstVectorIndex == -1)
+            {
+                Console.WriteLine($"{firstVectorName} was not found.");
+                return;
+            }
+            if(secondVectorIndex == -1)
+            {
+                Console.WriteLine($"{secondVectorName} was not found.");
+                return;
+            }
+
+            double resultX = vectorData[firstVectorIndex].vectorX + vectorData[secondVectorIndex].vectorX;
+
+            double resultY = vectorData[firstVectorIndex].vectorY + vectorData[secondVectorIndex].vectorY;
+
+            Console.WriteLine($"{vectorData[firstVectorIndex].vectorName} + {vectorData[secondVectorIndex].vectorName} = ({resultX}, {resultY})");
+
+        }
+
+
+        //subtract vectors
+        static void SubtractVectors(string userInput)
+        {
+            string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
+            string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (codeArray.Length != 3)
+            {
+                Console.WriteLine("USE: subvec firstVector secondVector");
+                return;
+            }
+
+            string firstVectorName = codeArray[1];
+            string secondVectorName = codeArray[2];
+
+            int firstVectorIndex = -1;
+            int secondVectorIndex = -1;
+
+            for (int i = 0; i < vectorCounter; i++)
+            {
+                if (vectorData[i].vectorName == firstVectorName)
+                {
+                    firstVectorIndex = i;
+                }
+
+                if (vectorData[i].vectorName == secondVectorName)
+                {
+                    secondVectorIndex = i;
+                }
+            }
+
+            if (firstVectorIndex == -1)
+            {
+                Console.WriteLine($"{firstVectorName} was not found.");
+                return;
+            }
+            if (secondVectorIndex == -1)
+            {
+                Console.WriteLine($"{secondVectorName} was not found.");
+                return;
+            }
+
+            double resultX = vectorData[firstVectorIndex].vectorX - vectorData[secondVectorIndex].vectorX;
+
+            double resultY = vectorData[firstVectorIndex].vectorY - vectorData[secondVectorIndex].vectorY;
+
+            Console.WriteLine($"{vectorData[firstVectorIndex].vectorName} - {vectorData[secondVectorIndex].vectorName} = ({resultX}, {resultY})");
+
+        }
+
+        //dot product of vectors
+
+        static void MultiplyVectors(string userInput)
+        {
+            string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
+            string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (codeArray.Length != 3)
+            {
+                Console.WriteLine("USE: dot firstVector secondVector");
+                return;
+            }
+
+            string firstVectorName = codeArray[1];
+            string secondVectorName = codeArray[2];
+
+            int firstVectorIndex = -1;
+            int secondVectorIndex = -1;
+
+            for (int i = 0; i < vectorCounter; i++)
+            {
+                if (vectorData[i].vectorName == firstVectorName)
+                {
+                    firstVectorIndex = i;
+                }
+
+                if (vectorData[i].vectorName == secondVectorName)
+                {
+                    secondVectorIndex = i;
+                }
+            }
+
+            if (firstVectorIndex == -1)
+            {
+                Console.WriteLine($"{firstVectorName} was not found.");
+                return;
+            }
+            if (secondVectorIndex == -1)
+            {
+                Console.WriteLine($"{secondVectorName} was not found.");
+                return;
+            }
+
+            double resultX = vectorData[firstVectorIndex].vectorX * vectorData[secondVectorIndex].vectorX;
+
+            double resultY = vectorData[firstVectorIndex].vectorY * vectorData[secondVectorIndex].vectorY;
+
+            double dotProduct = resultX + resultY;
+
+            Console.WriteLine($"{vectorData[firstVectorIndex].vectorName} * {vectorData[secondVectorIndex].vectorName} = {resultX} + {resultY}");
+            Console.WriteLine($"{vectorData[firstVectorIndex].vectorName} * {vectorData[secondVectorIndex].vectorName} = {dotProduct}");
+
+        }
+
+        //scalar multiplication
+        static void ScaleVec(string userInput)
+        {
+            string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
+            string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (codeArray.Length != 3)
+            {
+                Console.WriteLine("USE: scalvec value vectorName");
+                return;
+            }
+
+            double scalar = 0;
+            if (double.TryParse(codeArray[1], out scalar) == false)
+            {
+                Console.WriteLine("Scalar must be a valid number!");
+                return;
+            }
+            
+
+            string vectorName = codeArray[2];
+
+            int vectorIndex = -1;
+
+
+            for (int i = 0; i < vectorCounter; i++)
+            {
+                if (vectorData[i].vectorName == vectorName)
+                {
+                    vectorIndex = i;
+                }
+            }
+
+            if (vectorIndex == -1)
+            {
+                Console.WriteLine($"{vectorName} was not found.");
+                return;
+            }
+
+            double resultX = vectorData[vectorIndex].vectorX * scalar;
+            double resultY = vectorData[vectorIndex].vectorY * scalar;
+
+
+            Console.WriteLine($"{scalar}{vectorName} = ({resultX}, {resultY})");
+        }
+
         //Process the calculator
         static void ProcessCommand(string userInput)
         {
-            if(userInput.StartsWith("deg2rad "))
+            if(userInput.StartsWith("scalvec "))
+            {
+                ScaleVec(userInput);
+            }
+            else if (userInput.StartsWith("dotvec "))
+            {
+                MultiplyVectors(userInput);
+            }
+            else if (userInput.StartsWith("subvec "))
+            {
+                SubtractVectors(userInput);
+            }
+            else if (userInput.StartsWith("addvec "))
+            {
+                AddVectors(userInput);
+            }
+            else if (userInput.StartsWith("vec "))
+            {
+                CreateVector(userInput);
+            }
+            else if (userInput.StartsWith("deg2rad "))
             {
                 DegreesToRadians(userInput);
             }
@@ -552,19 +858,19 @@
             {
                 RadiansToDegrees(userInput);
             }
-            else if(userInput.StartsWith("gradientline "))
+            else if (userInput.StartsWith("gradientline "))
             {
                 CalculateGradient(userInput);
             }
-            else if(userInput.StartsWith("midpointline "))
+            else if (userInput.StartsWith("midpointline "))
             {
                 CalculateMidpoint(userInput);
             }
-            else if(userInput.StartsWith("lengthline "))
+            else if (userInput.StartsWith("lengthline "))
             {
                 CalculateLineLength(userInput);
             }
-            else if(userInput.StartsWith("line "))
+            else if (userInput.StartsWith("line "))
             {
                 CreateLine(userInput);
             }
@@ -588,7 +894,7 @@
             else
             {
                 bool answer = CalculateExpression(userInput, out double result);
-                if(answer == true)
+                if (answer == true)
                 {
                     Console.WriteLine(result);
                 }
