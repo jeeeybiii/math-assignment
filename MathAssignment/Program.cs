@@ -2,6 +2,17 @@
 {
     public class Program
     {
+        //geometry struct
+        public struct LineData
+        {
+            public string lineName;
+            public double x1;
+            public double y1;
+            public double x2;
+            public double y2;
+        }
+        public static LineData[] lineData = new LineData[50]; 
+        public static int lineCounter = 0;
         static void Main(string[] args)
         {
             MainMenu();
@@ -302,38 +313,288 @@
             Console.WriteLine(squareRootResult);
         }
 
-       
+        //geometry
+        static void CreateLine(string userInput)
+        {
+            bool checker = true;
+            string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
+            string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (codeArray.Length != 6)
+            {
+                Console.WriteLine("USE: line name ( x1, y1, x2, y2 )");
+                return;
+            }
+
+            if (lineCounter >= lineData.Length)
+            {
+                Console.WriteLine("Line storage is full");
+                return;
+            }
+
+            
+            string newLineName = codeArray[1];
+            for (int i = 0; i < lineCounter; i++)
+            {
+                if (lineData[i].lineName == newLineName)
+                {
+                    Console.WriteLine("Line name already exists!");
+                    return;
+                }
+            }
+
+            if (double.TryParse(codeArray[2], out double x1) == false)
+            {
+                checker = false;
+            }
+            if (double.TryParse(codeArray[3], out double y1) == false)
+            {
+                checker = false;
+            }
+            if (double.TryParse(codeArray[4], out double x2) == false)
+            {
+                checker = false;
+            }
+            if (double.TryParse(codeArray[5], out double y2) == false)
+            {
+                checker = false;
+            }
+
+            if(checker == false)
+            {
+                Console.WriteLine("All coordinates must be valid numbers!");
+                return;
+            }
+            else
+            {
+                lineData[lineCounter].lineName = newLineName;
+                lineData[lineCounter].x1 = x1;
+                lineData[lineCounter].y1 = y1;
+                lineData[lineCounter].x2 = x2;
+                lineData[lineCounter].y2 = y2;
+            }
+
+            Console.WriteLine($"Line {lineData[lineCounter].lineName} created: ({x1}, {y1}) to ({x2}, {y2})");
+            lineCounter++;
+
+        }
+        static void CalculateLineLength(string userInput)
+        {
+            string targetName;
+            int foundIndex = -1; 
+            string[] codeArray = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if(codeArray.Length != 2)
+            {
+                Console.WriteLine("USE: lengthline name");
+                return;
+            }
+            targetName = codeArray[1];
+
+            for(int i = 0; i < lineCounter; i++)
+            {
+                if (lineData[i].lineName == targetName)
+                {
+                    foundIndex = i;
+                    break;
+                }
+            }
+
+            if(foundIndex == -1)
+            {
+                Console.WriteLine("Line not found");
+                return;
+            }
+
+            double differenceX = lineData[foundIndex].x2 - lineData[foundIndex].x1;
+
+            double differenceY = lineData[foundIndex].y2 - lineData[foundIndex].y1;
+
+            double length = Math.Sqrt((differenceX * differenceX) + (differenceY * differenceY));
+
+            Console.WriteLine($"Length of line {lineData[foundIndex].lineName}: {length}");
+        }
+
+        //midpoint
+        static void CalculateMidpoint(string userInput)
+        {
+            string targetName;
+            int foundIndex = -1;
+            string[] codeArray = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (codeArray.Length != 2)
+            {
+                Console.WriteLine("USE: midpointline name");
+                return;
+            }
+            targetName = codeArray[1];
+
+            for (int i = 0; i < lineCounter; i++)
+            {
+                if (lineData[i].lineName == targetName)
+                {
+                    foundIndex = i;
+                    break;
+                }
+            }
+
+            if (foundIndex == -1)
+            {
+                Console.WriteLine("Line not found");
+                return;
+            }
+
+            double midpointx = (lineData[foundIndex].x1 + lineData[foundIndex].x2) / 2;
+
+            double midpointy = (lineData[foundIndex].y1 + lineData[foundIndex].y2) / 2;
+
+            Console.WriteLine($"Midpoint of line {targetName}: ({midpointx}, {midpointy})");
+        }
+
+        //line gradient
+        static void CalculateGradient(string userInput)
+        {
+            string targetName;
+            int foundIndex = -1;
+            string[] codeArray = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (codeArray.Length != 2)
+            {
+                Console.WriteLine("USE: gradientline name");
+                return;
+            }
+            targetName = codeArray[1];
+
+            for (int i = 0; i < lineCounter; i++)
+            {
+                if (lineData[i].lineName == targetName)
+                {
+                    foundIndex = i;
+                    break;
+                }
+            }
+
+            if (foundIndex == -1)
+            {
+                Console.WriteLine("Line not found");
+                return;
+            }
+
+            double changeY = (lineData[foundIndex].y2 - lineData[foundIndex].y1);
+
+            double changeX = (lineData[foundIndex].x2 - lineData[foundIndex].x1);
+
+            if(changeX == 0)
+            {
+                Console.WriteLine("Gradient is undefined for a vertical line");
+                return;
+            }
+
+            double gradient = changeY / changeX;
+            Console.WriteLine($"Gradient line {targetName}: {gradient}");
+        }
+
+
+        //radians to degrees
+        static void RadiansToDegrees(string userInput)
+        {
+            string[] codeArray = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (codeArray.Length != 2)
+            {
+                Console.WriteLine("USE: rad2deg value");
+                return;
+            }
+
+            double radians = 0;
+            if (double.TryParse(codeArray[1], out radians) == false)
+            {
+                Console.WriteLine("Invalid number!");
+                return;
+            }
+            
+            double degrees = radians * 180 / Math.PI;
+
+            Console.WriteLine(degrees);
+        }
+
+
+        //degrees to radians
+        static void DegreesToRadians(string userInput)
+        {
+            string[] codeArray = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (codeArray.Length != 2)
+            {
+                Console.WriteLine("USE: deg2rad value");
+                return;
+            }
+
+            double degrees = 0;
+            if (double.TryParse(codeArray[1], out degrees) == false)
+            {
+                Console.WriteLine("Invalid number!");
+                return;
+            }
+
+            double radians = degrees * Math.PI / 180;
+
+            Console.WriteLine(radians);
+        }
         //Process the calculator
         static void ProcessCommand(string userInput)
         {
-            if(userInput.Contains("(") || userInput.Contains(")"))
+            if(userInput.StartsWith("deg2rad "))
+            {
+                DegreesToRadians(userInput);
+            }
+            else if (userInput.StartsWith("rad2deg "))
+            {
+                RadiansToDegrees(userInput);
+            }
+            else if(userInput.StartsWith("gradientline "))
+            {
+                CalculateGradient(userInput);
+            }
+            else if(userInput.StartsWith("midpointline "))
+            {
+                CalculateMidpoint(userInput);
+            }
+            else if(userInput.StartsWith("lengthline "))
+            {
+                CalculateLineLength(userInput);
+            }
+            else if(userInput.StartsWith("line "))
+            {
+                CreateLine(userInput);
+            }
+            else if (userInput.EndsWith("!"))
+            {
+                CalculateFactorial(userInput);
+            }
+            else if (userInput.StartsWith("square "))
+            {
+                CalculateSquare(userInput);
+            }
+            else if (userInput.StartsWith("sqrt "))
+            {
+                CalculateSquareRoot(userInput);
+            }
+
+            else if (userInput.Contains("(") || userInput.Contains(")"))
             {
                 CalculateParenthesesExpression(userInput);
             }
             else
             {
-                if (userInput.EndsWith("!"))
+                bool answer = CalculateExpression(userInput, out double result);
+                if(answer == true)
                 {
-                    CalculateFactorial(userInput);
+                    Console.WriteLine(result);
                 }
-                else if (userInput.StartsWith("square "))
-                {
-                    CalculateSquare(userInput);
-                }
-                else if (userInput.StartsWith("sqrt "))
-                {
-                    CalculateSquareRoot(userInput);
-                }
-                else
-                {
-                    bool answer = CalculateExpression(userInput, out double result);
-                    if(answer == true)
-                    {
-                        Console.WriteLine(result);
-                    }
-                }
-
             }
+
+            
         }
 
     }
