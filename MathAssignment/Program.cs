@@ -826,11 +826,280 @@ namespace MathAssignment
 
             Console.WriteLine($"{scalar}{vectorName} = ({resultX}, {resultY})");
         }
+        //END OF VECTORS
+
+        //START OF NUMBER THEORY
+        static void CheckPrime(string userInput)
+        {
+            string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
+            string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (codeArray.Length != 2)
+            {
+                Console.WriteLine("USE: numprime value");
+                return;
+            }
+
+            int prime = 0;
+            if (int.TryParse(codeArray[1], out prime) == false)
+            {
+                Console.WriteLine("Prime testing requires a whole number!");
+                return;
+            }
+
+            if (prime < 2)
+            {
+                Console.WriteLine("A prime number must be 2 or greater!");
+                return;
+            }
+
+            bool isPrime = true;
+            for(int i = 2; i * i <= prime; i++)
+            {
+                if(prime % i == 0)
+                {
+                    isPrime = false;
+                    break;
+                }
+            }
+
+            if(isPrime == true)
+            {
+                Console.WriteLine($"{prime} is a prime");
+            }
+            else
+            {
+                Console.WriteLine($"{prime} is not a prime");
+            }
+        }
+
+        static void CheckDivisibility(string userInput)
+        {
+            string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
+            string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if(codeArray.Length != 3)
+            {
+                Console.WriteLine("USE: divisible number divisor");
+                return;
+            }
+
+            int number = 0;
+            int divisor = 0;
+
+            if (int.TryParse(codeArray[1], out number) == false)
+            {
+                Console.WriteLine("Number must be a valid number!");
+                return;
+            }
+
+            if(int.TryParse(codeArray[2], out divisor) == false)
+            {
+                Console.WriteLine("Divisible must be a valid number!");
+                return;
+            }
+
+            if(divisor == 0)
+            {
+                Console.WriteLine("Cannot divide by 0");
+                return;
+            }
+
+            if(number % divisor == 0)
+            {
+                Console.WriteLine($"{number} is divisible by {divisor}.");
+            }
+            else
+            {
+                Console.WriteLine($"{number} is not divisible by {divisor}.");
+            }
+        }
+
+        static void CalculateCheckDigit(string userInput)
+        {
+            string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
+            string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            
+            if(codeArray.Length != 2)
+            {
+                Console.WriteLine("USE: numcheckdigit value");
+                return;
+            }
+
+            string numericalString = codeArray[1];
+
+            foreach(char s in numericalString)
+            {
+                if(char.IsDigit(s) == false)
+                {
+                    Console.WriteLine("All characters must be a valid number!");
+                    return;
+                }
+            }
+
+            int total = 0;
+            int digit = 0;
+            int checkDigit = 0;
+            int weight = 0;
+            if(numericalString.Length == 9)
+            {
+                weight = 10;
+                total = 0;
+                Console.WriteLine("ISBN detected");
+                for (int i = 0; i < numericalString.Length; i++)
+                {
+                    digit = numericalString[i] - '0';
+                    total = total + digit * weight;
+                    weight--;
+                    
+                }
+                checkDigit = (11 - (total % 11)) % 11;
+                if(checkDigit == 10)
+                {
+                    Console.WriteLine(numericalString + "X");
+                }
+                else
+                {
+                    Console.WriteLine(numericalString + checkDigit);
+                }
+            }
+            else if(numericalString.Length == 11)
+            {
+                total = 0;
+                Console.WriteLine("UPC detected");
+                for(int i = 0; i < numericalString.Length; i++)
+                {
+                    digit = numericalString[i] - '0';
+
+                    if(i % 2 == 0)
+                    {
+                        total = total + digit * 3;
+                    }
+                    else
+                    {
+                        total = total + digit;
+                    }
+                }
+                checkDigit = (10 - (total % 10)) % 10;
+                Console.WriteLine(numericalString + checkDigit);
+            }
+            else if (numericalString.Length == 12)
+            {
+                Console.WriteLine("EAN-13 detected");
+                total = 0;
+                for (int i = 0; i < numericalString.Length; i++)
+                {
+                    digit = numericalString[i] - '0';
+
+                    if (i % 2 == 0)
+                    {
+                        total = total + digit;
+                    }
+                    else
+                    {
+                        total = total + digit * 3;
+                    }
+                }
+                checkDigit = (10 - (total % 10)) % 10;
+                Console.WriteLine(numericalString + checkDigit);
+            }
+            else
+            {
+                Console.WriteLine("Unsupported code length. Enter 9, 11, or 12 digits");
+            }
+        }
+
+        static void GenerateRandomNumber(string userInput)
+        {
+            string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
+            string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            int xCounter = 1, xValue = 0, currentX = 0;
+            if(codeArray.Length != 5)
+            {
+                Console.WriteLine("USE: numrand a X c m");
+                return;
+            }
+
+            if (int.TryParse(codeArray[1], out int a) == false)
+            {
+                Console.WriteLine("a must be a valid whole number.");
+                return;
+            }
+            if (int.TryParse(codeArray[2], out int x) == false)
+            {
+                Console.WriteLine("x must be a valid whole number.");
+                return;
+            }
+            if (int.TryParse(codeArray[3], out int c) == false)
+            {
+                Console.WriteLine("c must be a valid whole number.");
+                return;
+            }
+            if (int.TryParse(codeArray[4], out int m) == false)
+            {
+                Console.WriteLine("m must be a valid whole number.");
+                return;
+            }
+
+            if(m <= 0)
+            {
+                Console.WriteLine("The modulus must be greater than zero.");
+                return;
+            }
+
+            if (x < 0 || x >= m)
+            {
+                Console.WriteLine("The seed must be between 0 and m - 1");
+                return;
+            }
+
+            currentX = x;
+            bool[] valueSeen = new bool[m];
+            valueSeen[currentX] = true;
+            bool loop = true;
+            while (loop)
+            {
+
+
+                xValue = (a * currentX + c) % m;
+
+                Console.WriteLine($"X{xCounter} = ({a}({currentX}) + {c}) % {m}");
+                Console.WriteLine($"X{xCounter} = {xValue}");
+                Console.WriteLine();
+
+                if (valueSeen[xValue] == true)
+                {
+                    Console.WriteLine($"Sequence repeats at {xValue}");
+                    break;
+                }
+                valueSeen[xValue] = true;
+
+                currentX = xValue;
+
+                xCounter++;
+            }
+        }
 
         //Process the calculator
         static void ProcessCommand(string userInput)
         {
-            if(userInput.StartsWith("scalvec "))
+            if(userInput.StartsWith("numrand "))
+            {
+                GenerateRandomNumber(userInput);
+            }
+            else if (userInput.StartsWith("numcheckdigit "))
+            {
+                CalculateCheckDigit(userInput);
+            }
+            else if(userInput.StartsWith("divisible "))
+            {
+                CheckDivisibility(userInput);
+            }
+            else if (userInput.StartsWith("numprime "))
+            {
+                CheckPrime(userInput);
+            }
+            else if(userInput.StartsWith("scalvec "))
             {
                 ScaleVec(userInput);
             }
