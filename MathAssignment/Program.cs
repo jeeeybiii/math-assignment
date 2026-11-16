@@ -1,7 +1,4 @@
 ﻿//John Vincent L. Macuto & Akirah Quinto's Digital Numeracy Assignment
-
-using System.Runtime.ConstrainedExecution;
-
 namespace MathAssignment
 {
     public class Program

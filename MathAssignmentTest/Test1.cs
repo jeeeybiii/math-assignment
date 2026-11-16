@@ -962,5 +962,122 @@ namespace MathAssignmentTest
             StringAssert.Contains(output, "Line not found");
             Assert.AreEqual(0, MathAssignment.Program.lineCounter);
         }
+
+        //GEOMETRY TESTS END HERE
+        //================================================================
+        [TestMethod]
+        public void CreateVector_ValidComponents_CreatesVector()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateVector("vec a (3, 4)");
+
+            });
+            StringAssert.Contains(output, "Vector a created: (3, 4)");
+            Assert.AreEqual(1, MathAssignment.Program.vectorCounter);
+        }
+
+        [TestMethod]
+        public void CreateVector_DuplicateName_DisplaysError()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateVector("vec a (3, 4)");
+                MathAssignment.Program.CreateVector("vec a (5, 6)");
+
+            });
+            StringAssert.Contains(output, "Vector name already exists!");
+            Assert.AreEqual(1, MathAssignment.Program.vectorCounter);
+        }
+
+        [TestMethod]
+        public void CreateVector_InvalidComponent_DisplaysError()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateVector("vec a (3, apple)");
+
+            });
+            StringAssert.Contains(output, "All vectors must be valid numbers!");
+            Assert.AreEqual(0, MathAssignment.Program.vectorCounter);
+        }
+
+        [TestMethod]
+        public void CalculateVectorLength_ValidVector_DisplaysLength()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateVector("vec a (3, 4)");
+                MathAssignment.Program.CalculateVectorLength("lengthvec a");
+
+            });
+            StringAssert.Contains(output, "Length of a = 5");
+        }
+
+        [TestMethod]
+        public void AddVectors_ValidVectors_DisplaysSum()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateVector("vec a (3, 2)");
+                MathAssignment.Program.CreateVector("vec b (-4, 5)");
+                MathAssignment.Program.AddVectors("addvec a b");
+
+            });
+            StringAssert.Contains(output, "a + b = (-1, 7)");
+        }
+
+        [TestMethod]
+        public void SubtractVectors_ValidVectors_DisplaysDifference()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateVector("vec a (3, 2)");
+                MathAssignment.Program.CreateVector("vec b (-4, 5)");
+                MathAssignment.Program.SubtractVectors("subvec a b");
+
+            });
+            StringAssert.Contains(output, "b - a = (-7, 3)");
+        }
+
+        [TestMethod]
+        public void MultiplyVectors_ValidVectors_DisplaysDotProduct()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateVector("vec a (3, 2)");
+                MathAssignment.Program.CreateVector("vec b (-4, 5)");
+                MathAssignment.Program.MultiplyVectors("dotvec a b");
+
+            });
+            StringAssert.Contains(output, "a * b = -2");
+        }
+
+        [TestMethod]
+        public void ScaleVec_ValidScalar_DisplaysScaledVector()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateVector("vec a (3, 2)");
+                MathAssignment.Program.ScaleVec("scalvec 3 a");
+
+            });
+            StringAssert.Contains(output, "3a = (9, 6)");
+        }
+
+        [TestMethod]
+        public void AddVectors_MissingVector_DisplaysError()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateVector("vec a (3, 2)");
+                MathAssignment.Program.AddVectors("addvec a missing");
+
+            });
+            StringAssert.Contains(output, "missing was not found.");
+        }
+
+        //VECTORS TESTS END HERE
+        //================================================================
     }
 }
