@@ -177,7 +177,7 @@ namespace MathAssignment
             Console.WriteLine($"{"number!",-28}Factorial");
             Console.WriteLine($"{"square number",-28}Square a number");
             Console.WriteLine($"{"sqrt number",-28}Square root a number");
-            Console.WriteLine($"{"(expression)",-28}Evaluate a parentheses using BEDMAS");
+            Console.WriteLine($"{"(expression)",-28}Evaluate parentheses using BEDMAS");
             Console.WriteLine();
 
             Console.WriteLine("GEOMETRY");
@@ -192,7 +192,7 @@ namespace MathAssignment
             Console.WriteLine("VECTORS");
             Console.WriteLine($"{"vec name (x, y)",-28}Create a vector");
             Console.WriteLine($"{"lengthvec name",-28}Calculate vector length");
-            Console.WriteLine($"{"addvec a b",-28}Create a + b");
+            Console.WriteLine($"{"addvec a b",-28}Add vectors, producing a + b");
             Console.WriteLine($"{"subvec a b",-28}Subtract a from b, producing b - a");
             Console.WriteLine($"{"dotvec a b",-28}Calculate dot product and its meaning");
             Console.WriteLine($"{"scalvec scalar name",-28}Apply scalar multiplication");
@@ -202,6 +202,7 @@ namespace MathAssignment
             Console.WriteLine($"{"numprime number",-28}Test primality");
             Console.WriteLine($"{"numcheckdigit digits",-28}Calculate ISBN, UPC, or EAN-13 check digit");
             Console.WriteLine($"{"numrand a X c m",-28}Generate an LCG sequence");
+            Console.WriteLine($"{"divisible divisor number",-28}Test whether one number divides another");
             Console.WriteLine();
 
             Console.WriteLine("MATRICES");
@@ -1195,7 +1196,7 @@ namespace MathAssignment
          * Solution: The method checks possible divisors only while divisor squared is less than or equal to the number.
          * Reason: If a number has a factor, one factor must be at or below its square root, making this more efficient.
          */
-        static void CheckPrime(string userInput)
+        public static void CheckPrime(string userInput)
         {
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -1216,6 +1217,12 @@ namespace MathAssignment
             if (prime < 2)
             {
                 Console.WriteLine("A prime number must be 2 or greater!");
+                return;
+            }
+
+            if(prime >= 10000)
+            {
+                Console.WriteLine("Prime testing only accepts numbers below 10000.");
                 return;
             }
 
@@ -1301,7 +1308,7 @@ namespace MathAssignment
          * selects the appropriate weighted calculation. ISBN check value 10 is displayed as X.
          * Reason: String storage preserves leading zeros while still allowing individual digits to be converted safely.
          */
-        static void CalculateCheckDigit(string userInput)
+        public static void CalculateCheckDigit(string userInput)
         {
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -1405,7 +1412,7 @@ namespace MathAssignment
          * Solution: The method repeatedly applies (aX + c) mod m and uses a Boolean array to remember values already seen.
          * Reason: Modulo limits results to 0 through m - 1, so the Boolean array detects the inevitable repeated sequence.
          */
-        static void GenerateRandomNumber(string userInput)
+        public static void GenerateRandomNumber(string userInput)
         {
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
