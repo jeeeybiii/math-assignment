@@ -328,7 +328,7 @@ namespace MathAssignment
          * Reason:
          * To display a working calculator.
          */
-        static bool CalculateExpression(string userInput, out double result)
+        public static bool CalculateExpression(string userInput, out double result)
         {
             //initialize variables
             result = 0;
