@@ -200,6 +200,105 @@ namespace MathAssignmentTest
 
         }
 
+        [TestMethod]
+        public void CalculateFactorial_ValidNumber_DisplaysResult()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CalculateFactorial("5!");
+
+            });
+            StringAssert.Contains(output, "120");
+        }
+
+        [TestMethod]
+        public void CalculateFactorial_Zero_DisplaysOne()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CalculateFactorial("0!");
+
+            });
+            StringAssert.Contains(output, "1");
+        }
+
+        [TestMethod]
+        public void CalculateFactorial_NegativeNumber_DisplaysError()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CalculateFactorial("-3!");
+
+            });
+            StringAssert.Contains(output, "Factorial cannot use a negative number!");
+        }
+
+        [TestMethod]
+        public void CalculateFactorial_DecimalNumber_DisplaysError()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CalculateFactorial("3.5!");
+
+            });
+            StringAssert.Contains(output, "Factorial requires a whole number!");
+        }
+
+        [TestMethod]
+        public void CalculateSquare_ValidNumber_DisplaysResult()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CalculateSquare("square 5");
+
+            });
+            StringAssert.Contains(output, "25");
+        }
+
+        [TestMethod]
+        public void CalculateSquareRoot_ValidNumber_DisplaysResult()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CalculateSquare("sqrt 25");
+
+            });
+            StringAssert.Contains(output, "5");
+        }
+
+        [TestMethod]
+        public void CalculateSquareRoot_NegativeNumber_DisplaysError()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CalculateSquareRoot("sqrt -4");
+
+            });
+            StringAssert.Contains(output, "Cannot sqaure root a negative number!");
+        }
+
+        [TestMethod]
+        public void CalculateParenthesesExpression_ValidExpression_DisplaysResult()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CalculateParenthesesExpression("(2 + 3) * 4");
+
+            });
+            StringAssert.Contains(output, "20");
+        }
+
+        [TestMethod]
+        public void CalculateParenthesesExpression_MismatchedParentheses_DisplaysError()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CalculateParenthesesExpression("(2 + 3");
+
+            });
+            StringAssert.Contains(output, "Mismatched parentheses");
+        }
+
         //ARITHMETIC TESTS END HERE
         //================================================================
         //PRIME TEST

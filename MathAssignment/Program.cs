@@ -233,7 +233,7 @@ namespace MathAssignment
          * To separate standard arithmetic BEDMAS into prioritizing what's inside the 
          * parentheses first.
          */
-        static void CalculateParenthesesExpression(string userInput)
+        public static void CalculateParenthesesExpression(string userInput)
         {
             int openingCount = 0, closingCount = 0;
             int openingPosition = 0, closingPosition = 0;
@@ -423,7 +423,7 @@ namespace MathAssignment
          * Reason:
          * I separated the standard arithmetic operations if a userinput has '!' in a number.
          */
-        static void CalculateFactorial(string userInput)
+        public static void CalculateFactorial(string userInput)
         {
             string numberText;
             int index = 0, factorialNumber = 0;
@@ -480,7 +480,7 @@ namespace MathAssignment
          * Reason:
          * To demonstrate that the calculator has the core functionalities.
          */
-        static void CalculateSquare(string userInput)
+        public static void CalculateSquare(string userInput)
         {
             string[] codeArray = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             double squareNumber = 0, squareResult = 0;
@@ -521,7 +521,7 @@ namespace MathAssignment
          * TryParse prevents invalid text from crashing the program, while the
          * negative-number check prevents an undefined real-number operation.
          */
-        static void CalculateSquareRoot(string userInput)
+        public static void CalculateSquareRoot(string userInput)
         {
             double squareRootNumber = 0, squareRootResult = 0;
             string[] codeArray = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
