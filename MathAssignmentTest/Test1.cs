@@ -5,6 +5,22 @@ namespace MathAssignmentTest
     [DoNotParallelize]
     public sealed class TestClass
     {
+        private static string CaptureConsoleOutput(Action action)
+        {
+            StringWriter output = new StringWriter();
+            TextWriter originalOutput = Console.Out;
+            Console.SetOut(output);
+
+            try
+            {
+                action();
+                return output.ToString();
+            }
+            finally
+            {
+                Console.SetOut(originalOutput);
+            }
+        }
 
         //ARITHMETIC UNIT TESTS
         [TestMethod]
@@ -185,7 +201,6 @@ namespace MathAssignmentTest
         }
 
         //ARITHMETIC TESTS END HERE
-
         //================================================================
         //PRIME TEST
         [TestMethod]
@@ -603,6 +618,349 @@ namespace MathAssignmentTest
             {
                 Console.SetOut(originalOutput);
             }
+        }
+
+        //NUMBERT THEORY TESTS END HERE
+        //================================================================
+
+        [TestInitialize]
+        public void ResetStoredData()
+        {
+            MathAssignment.Program.lineData =
+                new MathAssignment.Program.LineData[50];
+            MathAssignment.Program.lineCounter = 0;
+
+            MathAssignment.Program.vectorData =
+                new MathAssignment.Program.VectorData[50];
+            MathAssignment.Program.vectorCounter = 0;
+
+            MathAssignment.Program.matrixData =
+                new MathAssignment.Program.MatrixData[50];
+            MathAssignment.Program.matrixCounter = 0;
+        }
+
+        [TestMethod]
+        public void CreateMatrix_ValidInput_CreatesMatrix()
+        {
+            // Arrange
+            StringWriter output = new StringWriter();
+            TextWriter originalOutput = Console.Out;
+            Console.SetOut(output);
+
+            try
+            {
+                // Act
+                MathAssignment.Program.CreateMatrix(
+                    "mat a (1 2 3 4)");
+
+                string consoleOutput = output.ToString();
+
+                // Assert
+                StringAssert.Contains(
+                    consoleOutput,
+                    "Matrix a created:");
+
+                StringAssert.Contains(
+                    consoleOutput,
+                    "[1 2]");
+
+                StringAssert.Contains(
+                    consoleOutput,
+                    "[3 4]");
+
+                Assert.AreEqual(
+                    1,
+                    MathAssignment.Program.matrixCounter);
+            }
+            finally
+            {
+                Console.SetOut(originalOutput);
+            }
+        }
+
+        [TestMethod]
+        public void CreateMatrix_InvalidElement_DisplaysError()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateMatrix(
+                    "mat a (1 apple 3 4)");
+            });
+
+            StringAssert.Contains(
+                output,
+                "All matrix elements must be valid numbers.");
+
+            Assert.AreEqual(
+                0,
+                MathAssignment.Program.matrixCounter);
+        }
+
+        [TestMethod]
+        public void AddMatrices_ValidMatrices_DisplaysSum()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateMatrix(
+                    "mat a (1 2 3 4)");
+
+                MathAssignment.Program.CreateMatrix(
+                    "mat b (5 6 7 8)");
+
+                MathAssignment.Program.AddMatrices(
+                    "addmat a b");
+            });
+
+            StringAssert.Contains(output, "a + b =");
+            StringAssert.Contains(output, "[6 8]");
+            StringAssert.Contains(output, "[10 12]");
+        }
+
+        [TestMethod]
+        public void AddMatrices_MissingMatrix_DisplaysError()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateMatrix(
+                    "mat a (1 2 3 4)");
+
+                MathAssignment.Program.AddMatrices(
+                    "addmat a b");
+            });
+
+            StringAssert.Contains(
+                output,
+                "b was not found.");
+        }
+
+        [TestMethod]
+        public void MultiplyMatrices_ValidMatrices_DisplaysProduct()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateMatrix(
+                    "mat a (1 2 3 4)");
+
+                MathAssignment.Program.CreateMatrix(
+                    "mat b (5 6 7 8)");
+
+                MathAssignment.Program.MultiplyMatrices(
+                    "dotmat a b");
+            });
+
+            StringAssert.Contains(output, "a * b =");
+            StringAssert.Contains(output, "[19 22]");
+            StringAssert.Contains(output, "[43 50]");
+        }
+
+        [TestMethod]
+        public void ScaleMatrix_ValidScalar_DisplaysScaledMatrix()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateMatrix(
+                    "mat a (1 2 3 4)");
+
+                MathAssignment.Program.ScaleMatrix(
+                    "scalmat 3 a");
+            });
+
+            StringAssert.Contains(output, "[3 6]");
+            StringAssert.Contains(output, "[9 12]");
+        }
+
+        [TestMethod]
+        public void CalculateDeterminant_ValidMatrix_DisplaysDeterminant()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateMatrix(
+                    "mat a (1 2 3 4)");
+
+                MathAssignment.Program.CalculateDeterminant(
+                    "detmat a");
+            });
+
+            StringAssert.Contains(
+                output,
+                "det(a) = -2");
+        }
+
+        [TestMethod]
+        public void CalculateInverse_InvertibleMatrix_DisplaysInverse()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateMatrix(
+                    "mat a (1 2 3 4)");
+
+                MathAssignment.Program.CalculateInverse(
+                    "invmat a");
+            });
+
+            StringAssert.Contains(output, "det(a) = -2");
+            StringAssert.Contains(output, "Inverse of matrix a");
+            StringAssert.Contains(output, "[-2 1]");
+            StringAssert.Contains(output, "[1.5 -0.5]");
+        }
+
+        [TestMethod]
+        public void CalculateInverse_ZeroDeterminant_DisplaysError()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateMatrix(
+                    "mat a (1 2 2 4)");
+
+                MathAssignment.Program.CalculateInverse(
+                    "invmat a");
+            });
+
+            StringAssert.Contains(
+                output,
+                "This matrix has no inverse");
+        }
+
+        //MATRICES TESTS END HERE
+        //================================================================
+        //GEOMETRY TESTS
+        [TestMethod]
+        public void CreateLine_ValidCoordinates_CreatesLine()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateLine("line a (1, 2, 3, 4)");
+            });
+
+            StringAssert.Contains(output, "Line a created: (1, 2) to (3, 4)");
+
+            Assert.AreEqual(1, MathAssignment.Program.lineCounter);
+            Assert.AreEqual("a", MathAssignment.Program.lineData[0].lineName);
+            Assert.AreEqual(1.0, MathAssignment.Program.lineData[0].x1, 0.0001);
+            Assert.AreEqual(2.0, MathAssignment.Program.lineData[0].y1, 0.0001);
+            Assert.AreEqual(3.0, MathAssignment.Program.lineData[0].x2, 0.0001);
+            Assert.AreEqual(4.0, MathAssignment.Program.lineData[0].y2, 0.0001);
+        }
+
+        [TestMethod]
+        public void CreateLine_DuplicateName_DisplaysError()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateLine("line a (1, 2, 3, 4)");
+
+                MathAssignment.Program.CreateLine("line a (5, 6, 7, 8)");
+            });
+
+            StringAssert.Contains(output, "Line name already exists!");
+
+            Assert.AreEqual(1, MathAssignment.Program.lineCounter);
+            Assert.AreEqual("a", MathAssignment.Program.lineData[0].lineName);
+            Assert.AreEqual(1.0, MathAssignment.Program.lineData[0].x1, 0.0001);
+            Assert.AreEqual(2.0, MathAssignment.Program.lineData[0].y1, 0.0001);
+            Assert.AreEqual(3.0, MathAssignment.Program.lineData[0].x2, 0.0001);
+            Assert.AreEqual(4.0, MathAssignment.Program.lineData[0].y2, 0.0001);
+        }
+
+        [TestMethod]
+        public void CreateLine_InvalidCoordinate_DisplaysError()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateLine("line a (1, apple, 3, 4)");
+
+                MathAssignment.Program.CalculateLineLength("line a (1, apple, 3, 4)");
+            });
+            StringAssert.Contains(output, "All coordinates must be valid numbers!");
+            Assert.AreEqual(0, MathAssignment.Program.lineCounter);
+
+        }
+
+        [TestMethod]
+        public void CalculateLineLength_ValidLine_DisplaysLength()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateLine("line a (0, 0, 3, 4)");
+
+                MathAssignment.Program.CalculateLineLength("lengthline a");
+
+            });
+            StringAssert.Contains(output, "Length of line a: 5");
+        }
+
+        [TestMethod]
+        public void CalculateMidpoint_ValidLine_DisplaysMidpoint()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateLine("line a (2, 4, 6, 8)");
+
+                MathAssignment.Program.CalculateMidpoint("midpointline a");
+
+            });
+            StringAssert.Contains(output, "Midpoint of line a: (4, 6)");
+        }
+
+        [TestMethod]
+        public void CalculateGradient_ValidLine_DisplaysGradient()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateLine("line a (1, 2, 3, 6)");
+
+                MathAssignment.Program.CalculateGradient("gradientline a");
+
+            });
+            StringAssert.Contains(output, "Gradient line a: 2");
+        }
+
+        [TestMethod]
+        public void CalculateGradient_VerticalLine_DisplaysUndefinedError()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CreateLine("line a (2, 1, 2, 8)");
+
+                MathAssignment.Program.CalculateGradient("gradientline a");
+
+            });
+            StringAssert.Contains(output, "Gradient is undefined for a vertical line");
+        }
+
+        [TestMethod]
+        public void DegreesToRadians_OneHundredEightyDegrees_DisplaysPi()
+        {
+            string expectedRadians = Math.PI.ToString();
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.DegreesToRadians("deg2rad 180");
+
+            });
+            StringAssert.Contains(output, expectedRadians);
+        }
+
+        [TestMethod]
+        public void RadiansToDegrees_PiRadians_DisplaysOneHundredEighty()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.RadiansToDegrees($"rad2deg {Math.PI}");
+
+            });
+            StringAssert.Contains(output, "180");
+        }
+
+        [TestMethod]
+        public void CalculateLineLength_MissingLine_DisplaysError()
+        {
+            string output = CaptureConsoleOutput(() =>
+            {
+                MathAssignment.Program.CalculateLineLength("lengthline missing");
+
+            });
+            StringAssert.Contains(output, "Line not found");
+            Assert.AreEqual(0, MathAssignment.Program.lineCounter);
         }
     }
 }

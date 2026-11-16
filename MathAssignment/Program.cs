@@ -559,7 +559,7 @@ namespace MathAssignment
          * are rejected, and the completed LineData value is stored in an array.
          * Reason: Named stored lines can be reused by length, midpoint, and gradient commands.
          */
-        static void CreateLine(string userInput)
+        public static void CreateLine(string userInput)
         {
             bool checker = true;
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
@@ -632,7 +632,7 @@ namespace MathAssignment
          * the distance formula using Math.Sqrt.
          * Reason: Searching by name allows one stored line to be used for several calculations.
          */
-        static void CalculateLineLength(string userInput)
+        public static void CalculateLineLength(string userInput)
         {
             string targetName;
             int foundIndex = -1; 
@@ -669,7 +669,7 @@ namespace MathAssignment
             Console.WriteLine($"Length of line {lineData[foundIndex].lineName}: {length}");
         }
 
-        
+
 
         /*
          * Method: CalculateMidpoint
@@ -678,7 +678,7 @@ namespace MathAssignment
          * Solution: The method searches by name and averages the two x values and two y values separately.
          * Reason: The midpoint formula produces the coordinate exactly halfway between both endpoints.
          */
-        static void CalculateMidpoint(string userInput)
+        public static void CalculateMidpoint(string userInput)
         {
             string targetName;
             int foundIndex = -1;
@@ -713,7 +713,7 @@ namespace MathAssignment
             Console.WriteLine($"Midpoint of line {targetName}: ({midpointx}, {midpointy})");
         }
 
-        
+
 
         /*
          * Method: CalculateGradient
@@ -722,7 +722,7 @@ namespace MathAssignment
          * Solution: The method finds the line, calculates both changes, and rejects a zero change in x.
          * Reason: The validation correctly reports an undefined gradient instead of crashing.
          */
-        static void CalculateGradient(string userInput)
+        public static void CalculateGradient(string userInput)
         {
             string targetName;
             int foundIndex = -1;
@@ -771,7 +771,7 @@ namespace MathAssignment
          * Solution: TryParse validates the value and the method multiplies it by 180 / Math.PI.
          * Reason: Math.PI provides a precise built-in value of pi for the standard conversion formula.
          */
-        static void RadiansToDegrees(string userInput)
+        public static void RadiansToDegrees(string userInput)
         {
             string[] codeArray = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
@@ -801,7 +801,7 @@ namespace MathAssignment
          * Solution: TryParse validates the value and the method multiplies it by Math.PI / 180.
          * Reason: This is the standard degree-to-radian conversion and avoids a hard-coded pi value.
          */
-        static void DegreesToRadians(string userInput)
+        public static void DegreesToRadians(string userInput)
         {
             string[] codeArray = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
@@ -823,7 +823,7 @@ namespace MathAssignment
             Console.WriteLine(radians);
         }
 
-        
+
 
         /*
          * Method: CalculateVectorLength
@@ -833,7 +833,7 @@ namespace MathAssignment
          * Reason: A vector's components form the two perpendicular sides used to calculate its magnitude.
          */
 
-        static void CalculateVectorLength(string userInput)
+        public static void CalculateVectorLength(string userInput)
         {
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -874,7 +874,7 @@ namespace MathAssignment
         //VECTOR COMMANDS START
 
 
-        
+
 
         /*
          * Method: CreateVector
@@ -885,7 +885,7 @@ namespace MathAssignment
          * Reason: Stored names allow later vector operations to reuse the same components.
          */
 
-        static void CreateVector(string userInput)
+        public static void CreateVector(string userInput)
         {
             bool checker = true;
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
@@ -940,7 +940,7 @@ namespace MathAssignment
         }
 
 
-        
+
 
         /*
          * Method: AddVectors
@@ -949,7 +949,7 @@ namespace MathAssignment
          * Solution: The method searches for both indexes, returns if either is missing, and adds matching components.
          * Reason: Vector addition combines x with x and y with y.
          */
-        static void AddVectors(string userInput)
+        public static void AddVectors(string userInput)
         {
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -999,7 +999,7 @@ namespace MathAssignment
         }
 
 
-        
+
 
         /*
          * Method: SubtractVectors
@@ -1008,7 +1008,7 @@ namespace MathAssignment
          * Solution: After locating both vectors, the first vector's components are subtracted from the second's.
          * Reason: This follows the required lexicon definition rather than assuming normal left-to-right order.
          */
-        static void SubtractVectors(string userInput)
+        public static void SubtractVectors(string userInput)
         {
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -1057,7 +1057,7 @@ namespace MathAssignment
 
         }
 
-        
+
 
         /*
          * Method: MultiplyVectors
@@ -1067,7 +1067,7 @@ namespace MathAssignment
          * zero, or negative to describe the vectors' general directional relationship.
          * Reason: This implements both the calculation and interpretation required by the assignment.
          */
-        static void MultiplyVectors(string userInput)
+        public static void MultiplyVectors(string userInput)
         {
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -1131,7 +1131,7 @@ namespace MathAssignment
             }
         }
 
-        
+
 
         /*
          * Method: ScaleVec
@@ -1140,7 +1140,7 @@ namespace MathAssignment
          * Solution: TryParse validates the scalar, the vector array is searched by name, and both components are multiplied.
          * Reason: Scalar multiplication changes a vector's magnitude and possibly its direction while preserving its structure.
          */
-        static void ScaleVec(string userInput)
+        public static void ScaleVec(string userInput)
         {
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -1494,7 +1494,7 @@ namespace MathAssignment
          * bottom-left, and bottom-right fields in MatrixData.
          * Reason: Named fields make later formulas easier to read and reduce position errors.
          */
-        static void CreateMatrix(string userInput)
+        public static void CreateMatrix(string userInput)
         {
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -1565,7 +1565,7 @@ namespace MathAssignment
          * Solution: Both matrices are found by name and their four matching fields are added separately.
          * Reason: Matrix addition is performed position by position.
          */
-        static void AddMatrices(string userInput)
+        public static void AddMatrices(string userInput)
         {
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -1625,7 +1625,7 @@ namespace MathAssignment
         }
 
 
-        
+
 
         /*
          * Method: ScaleMatrix
@@ -1634,7 +1634,7 @@ namespace MathAssignment
          * Solution: TryParse validates the scalar, the matrix is searched by name, and all four fields are multiplied.
          * Reason: Applying the scalar independently to every element follows the definition of scalar matrix multiplication.
          */
-        static void ScaleMatrix(string userInput)
+        public static void ScaleMatrix(string userInput)
         {
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -1685,7 +1685,7 @@ namespace MathAssignment
         }
 
 
-        
+
 
         /*
          * Method: CalculateDeterminant
@@ -1694,7 +1694,7 @@ namespace MathAssignment
          * Solution: The method applies (topLeft * bottomRight) - (topRight * bottomLeft).
          * Reason: This is the determinant formula for a 2x2 matrix and is also needed when finding an inverse.
          */
-        static void CalculateDeterminant(string userInput)
+        public static void CalculateDeterminant(string userInput)
         {
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -1728,7 +1728,7 @@ namespace MathAssignment
         }
 
 
-        
+
 
         /*
          * Method: MultiplyMatrices
@@ -1737,7 +1737,7 @@ namespace MathAssignment
          * Solution: Each result field is calculated using the appropriate row from the first matrix and column from the second.
          * Reason: Writing the four row-by-column calculations separately makes the operation clear and preserves operand order.
          */
-        static void MultiplyMatrices(string userInput)
+        public static void MultiplyMatrices(string userInput)
         {
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -1790,7 +1790,7 @@ namespace MathAssignment
         }
 
 
-        
+
 
         /*
          * Method: CalculateInverse
@@ -1800,7 +1800,7 @@ namespace MathAssignment
          * the other two values are negated, and every value is divided by the determinant.
          * Reason: This directly implements the standard 2x2 inverse formula while preventing an undefined operation.
          */
-        static void CalculateInverse(string userInput)
+        public static void CalculateInverse(string userInput)
         {
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
