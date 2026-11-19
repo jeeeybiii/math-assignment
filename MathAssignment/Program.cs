@@ -199,7 +199,7 @@ namespace MathAssignment
             Console.WriteLine($"{"numprime number",-28}Test primality");
             Console.WriteLine($"{"numcheckdigit digits",-28}Calculate ISBN, UPC, or EAN-13 check digit");
             Console.WriteLine($"{"numrand a X c m",-28}Generate an LCG sequence");
-            Console.WriteLine($"{"divisible divisor number",-28}Test whether one number divides another");
+            Console.WriteLine($"{"divisible number divisor",-28}Test whether one number divides another");
             Console.WriteLine();
 
             Console.WriteLine("MATRICES");
@@ -1957,7 +1957,15 @@ namespace MathAssignment
         //Process the calculator
         static void ProcessCommand(string userInput)
         {
-            if (userInput.StartsWith("invmat "))
+            if(userInput.StartsWith("decimal "))
+            {
+                BinaryToDecimal(userInput);
+            }
+            else if (userInput.StartsWith("binary "))
+            {
+                DecimalToBinary(userInput);
+            }
+            else if (userInput.StartsWith("invmat "))
             {
                 CalculateInverse(userInput);
             }
@@ -1965,7 +1973,7 @@ namespace MathAssignment
             {
                 MultiplyMatrices(userInput);
             }
-            else if(userInput.StartsWith("detmat "))
+            else if (userInput.StartsWith("detmat "))
             {
                 CalculateDeterminant(userInput);
             }
@@ -1973,7 +1981,7 @@ namespace MathAssignment
             {
                 ScaleMatrix(userInput);
             }
-            else if(userInput.StartsWith("addmat "))
+            else if (userInput.StartsWith("addmat "))
             {
                 AddMatrices(userInput);
             }
@@ -1981,7 +1989,7 @@ namespace MathAssignment
             {
                 CreateMatrix(userInput);
             }
-            else if(userInput.StartsWith("numrand "))
+            else if (userInput.StartsWith("numrand "))
             {
                 GenerateRandomNumber(userInput);
             }
@@ -1989,7 +1997,7 @@ namespace MathAssignment
             {
                 CalculateCheckDigit(userInput);
             }
-            else if(userInput.StartsWith("divisible "))
+            else if (userInput.StartsWith("divisible "))
             {
                 CheckDivisibility(userInput);
             }
@@ -1997,7 +2005,7 @@ namespace MathAssignment
             {
                 CheckPrime(userInput);
             }
-            else if(userInput.StartsWith("scalvec "))
+            else if (userInput.StartsWith("scalvec "))
             {
                 ScaleVec(userInput);
             }
