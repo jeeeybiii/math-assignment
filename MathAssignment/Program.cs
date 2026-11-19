@@ -211,6 +211,89 @@ namespace MathAssignment
             Console.WriteLine($"{"invmat name",-28}Calculate inverse");
         }
 
+        /*
+         * Method: DecimalToBinary
+         * Purpose: Converts a decimal whole number into binary.
+         */
+        public static void DecimalToBinary(string userInput)
+        {
+            string[] codeArray = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (codeArray.Length != 2)
+            {
+                Console.WriteLine("USE: binary number");
+                return;
+            }
+
+            int number = 0;
+
+            if (int.TryParse(codeArray[1], out number) == false)
+            {
+                Console.WriteLine("Please enter a valid whole number!");
+                return;
+            }
+
+            if (number < 0)
+            {
+                Console.WriteLine("Binary conversion does not accept negative numbers!");
+                return;
+            }
+
+            if (number == 0)
+            {
+                Console.WriteLine("0");
+                return;
+            }
+
+            string binary = "";
+
+            while (number > 0)
+            {
+                int remainder = number % 2;
+                binary = remainder + binary;
+                number = number / 2;
+            }
+
+            Console.WriteLine(binary);
+        }
+
+
+        /*
+        * Method: BinaryToDecimal
+        * Purpose: Converts a binary number into its decimal equivalent.
+        */
+        public static void BinaryToDecimal(string userInput)
+        {
+            string[] codeArray = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (codeArray.Length != 2)
+            {
+                Console.WriteLine("USE: decimal binaryNumber");
+                return;
+            }
+
+            string binary = codeArray[1];
+
+            int decimalNumber = 0;
+            int power = 1;
+
+            for (int i = binary.Length - 1; i >= 0; i--)
+            {
+                if (binary[i] != '0' && binary[i] != '1')
+                {
+                    Console.WriteLine("Binary numbers can only contain 0 and 1!");
+                    return;
+                }
+
+                int digit = binary[i] - '0';
+
+                decimalNumber = decimalNumber + (digit * power);
+
+                power = power * 2;
+            }
+
+            Console.WriteLine(decimalNumber);
+        }
 
         /*
          * Method:
