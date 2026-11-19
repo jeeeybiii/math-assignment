@@ -183,7 +183,7 @@ namespace MathAssignment
             Console.WriteLine($"{"square number",-28}Square a number");
             Console.WriteLine($"{"sqrt number",-28}Square root a number");
             Console.WriteLine($"{"(expression)",-28}Evaluate parentheses using BEDMAS");
-            Console.WriteLine($"{"number ^ number",-28}Exponentiation");
+            Console.WriteLine($"{"number ^ number",-28}Exponent");
             Console.WriteLine();
 
             Console.WriteLine("GEOMETRY");
