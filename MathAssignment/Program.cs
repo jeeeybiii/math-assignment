@@ -32,7 +32,7 @@ namespace MathAssignment
         }
 
         //geometry data
-        public static LineData[] lineData = new LineData[50]; 
+        public static LineData[] lineData = new LineData[50];
 
         public static int lineCounter = 0;
 
@@ -76,7 +76,7 @@ namespace MathAssignment
          * MainMenu
          * 
          * Purpose:
-         * Displays the heading, repeatedly acceps user commands, and continues until
+         * Displays the heading, repeatedly accepts user commands, and continues until
          * the user enters exit.
          * 
          * Difficulty:
@@ -166,6 +166,14 @@ namespace MathAssignment
             Console.WriteLine($"{"exit",-28}Close the calculator");
             Console.WriteLine();
 
+            Console.WriteLine("BINARY");
+            Console.WriteLine($"{"binary number",-28}Convert decimal to binary");
+            Console.WriteLine();
+
+            Console.WriteLine("DECIMAL");
+            Console.WriteLine($"{"decimal binaryNumber",-28}Convert binary to decimal");
+            Console.WriteLine();
+
             Console.WriteLine("ARITHMETIC");
             Console.WriteLine($"{"number + number",-28}Addition");
             Console.WriteLine($"{"number - number",-28}Subtraction");
@@ -175,6 +183,7 @@ namespace MathAssignment
             Console.WriteLine($"{"square number",-28}Square a number");
             Console.WriteLine($"{"sqrt number",-28}Square root a number");
             Console.WriteLine($"{"(expression)",-28}Evaluate parentheses using BEDMAS");
+            Console.WriteLine($"{"number ^ number",-28}Exponentiation");
             Console.WriteLine();
 
             Console.WriteLine("GEOMETRY");
@@ -199,7 +208,7 @@ namespace MathAssignment
             Console.WriteLine($"{"numprime number",-28}Test primality");
             Console.WriteLine($"{"numcheckdigit digits",-28}Calculate ISBN, UPC, or EAN-13 check digit");
             Console.WriteLine($"{"numrand a X c m",-28}Generate an LCG sequence");
-            Console.WriteLine($"{"divisible number divisor",-28}Test whether one number divides another");
+            Console.WriteLine($"{"divisible divisor number",-28}Test whether one number divides another");
             Console.WriteLine();
 
             Console.WriteLine("MATRICES");
@@ -212,22 +221,40 @@ namespace MathAssignment
         }
 
         /*
-         * Method: DecimalToBinary
-         * Purpose: Converts a decimal whole number into binary.
+         * Method: 
+         * DecimalToBinary
+         * 
+         * Purpose: 
+         * Converts a decimal whole number into binary.  
+         * 
+         * Difficulty:
+         * The main difficulty was understanding how to convert a decimal number into
+         * binary without using built-in conversion methods.
+         * 
+         * Solution:
+         * Used the modulo operator to get the remainder when dividing the number by 2.
+         * The remainder is added to the beginning of a string, and the original number
+         * is continuously divided by 2 until it reaches zero.
+         * 
+         * Reason:
+         * To demonstrates how decimal numbers are converted into binary through continuous division by 2.
          */
         public static void DecimalToBinary(string userInput)
         {
-            string[] codeArray = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            string[] codeArray = userInput.Split(' ');
 
             if (codeArray.Length != 2)
             {
                 Console.WriteLine("USE: binary number");
                 return;
             }
-
             int number = 0;
 
-            if (int.TryParse(codeArray[1], out number) == false)
+            if (int.Parse(codeArray[1]) >= 0)
+            {
+                number = int.Parse(codeArray[1]);
+            }
+            else
             {
                 Console.WriteLine("Please enter a valid whole number!");
                 return;
@@ -257,14 +284,29 @@ namespace MathAssignment
             Console.WriteLine(binary);
         }
 
-
         /*
-        * Method: BinaryToDecimal
-        * Purpose: Converts a binary number into its decimal equivalent.
+        * Method: 
+        * BinaryToDecimal
+        * 
+        * Purpose:
+        * Converts a binary number into its decimal equivalent.
+        * 
+        * Difficulty:
+        * The main difficulty was understanding how each binary digit contributes to
+        * the final decimal value depending on its position.
+        * 
+        * Solution:
+        * Used a for loop to read the binary number from right to left. Each digit is
+        * multiplied by its corresponding power of 2, and the results are added together.
+        * The method also checks whether the binary number contains only 0 and 1.
+        *
+        * Reason:
+        * To illustrate how each binary digit contributes to its corresponding decimal value
+        * based on its position and place value.
         */
         public static void BinaryToDecimal(string userInput)
         {
-            string[] codeArray = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            string[] codeArray = userInput.Split(' ');
 
             if (codeArray.Length != 2)
             {
@@ -273,6 +315,12 @@ namespace MathAssignment
             }
 
             string binary = codeArray[1];
+
+            if (binary.Length == 0)
+            {
+                Console.WriteLine("Please enter a binary number!");
+                return;
+            }
 
             int decimalNumber = 0;
             int power = 1;
@@ -447,7 +495,10 @@ namespace MathAssignment
                     if (codeArray[i] != "+" &&
                         codeArray[i] != "-" &&
                         codeArray[i] != "*" &&
-                        codeArray[i] != "/")
+                        codeArray[i] != "/" &&
+                        codeArray[i] != "^")
+
+
                     {
                         Console.WriteLine("Invalid operator!");
                         return false;
@@ -482,6 +533,9 @@ namespace MathAssignment
                     case "-":
                         total = total + currentTerm;
                         currentTerm = -nextNumber;
+                        break;
+                    case "^":
+                        currentTerm = Math.Pow(currentTerm, nextNumber);
                         break;
                 }
             }
@@ -525,21 +579,21 @@ namespace MathAssignment
             }
 
             //if number is a negative
-            if(factorialNumber < 0)
+            if (factorialNumber < 0)
             {
                 Console.WriteLine("Factorial cannot use a negative number!");
                 return;
             }
-            
+
             //if number is too large
-            if(factorialNumber > 20)
+            if (factorialNumber > 20)
             {
                 Console.WriteLine("Factorial is too large!");
                 return;
             }
 
             //calculate factorial
-            for(int i = 1; i <= factorialNumber; i++)
+            for (int i = 1; i <= factorialNumber; i++)
             {
                 factorialResult = factorialResult * i;
             }
@@ -568,7 +622,7 @@ namespace MathAssignment
             string[] codeArray = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             double squareNumber = 0, squareResult = 0;
 
-            if(codeArray.Length != 2)
+            if (codeArray.Length != 2)
             {
                 Console.WriteLine("USE: square number");
                 return;
@@ -621,7 +675,7 @@ namespace MathAssignment
                 return;
             }
 
-            if( squareRootNumber < 0)
+            if (squareRootNumber < 0)
             {
                 Console.WriteLine("Cannot sqaure root a negative number!");
                 return;
@@ -657,7 +711,7 @@ namespace MathAssignment
                 return;
             }
 
-            
+
             string newLineName = codeArray[1];
             for (int i = 0; i < lineCounter; i++)
             {
@@ -685,7 +739,7 @@ namespace MathAssignment
                 checker = false;
             }
 
-            if(checker == false)
+            if (checker == false)
             {
                 Console.WriteLine("All coordinates must be valid numbers!");
                 return;
@@ -715,17 +769,17 @@ namespace MathAssignment
         public static void CalculateLineLength(string userInput)
         {
             string targetName;
-            int foundIndex = -1; 
+            int foundIndex = -1;
             string[] codeArray = userInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-            if(codeArray.Length != 2)
+            if (codeArray.Length != 2)
             {
                 Console.WriteLine("USE: lengthline name");
                 return;
             }
             targetName = codeArray[1];
 
-            for(int i = 0; i < lineCounter; i++)
+            for (int i = 0; i < lineCounter; i++)
             {
                 if (lineData[i].lineName == targetName)
                 {
@@ -734,7 +788,7 @@ namespace MathAssignment
                 }
             }
 
-            if(foundIndex == -1)
+            if (foundIndex == -1)
             {
                 Console.WriteLine("Line not found");
                 return;
@@ -834,7 +888,7 @@ namespace MathAssignment
 
             double changeX = (lineData[foundIndex].x2 - lineData[foundIndex].x1);
 
-            if(changeX == 0)
+            if (changeX == 0)
             {
                 Console.WriteLine("Gradient is undefined for a vertical line");
                 return;
@@ -867,7 +921,7 @@ namespace MathAssignment
                 Console.WriteLine("Invalid number!");
                 return;
             }
-            
+
             double degrees = radians * 180 / Math.PI;
 
             Console.WriteLine(degrees);
@@ -917,7 +971,7 @@ namespace MathAssignment
         {
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            
+
             if (codeArray.Length != 2)
             {
                 Console.WriteLine("USE: lengthvec vectorName");
@@ -936,7 +990,7 @@ namespace MathAssignment
                 }
             }
 
-            if(vectorIndex == -1)
+            if (vectorIndex == -1)
             {
                 Console.WriteLine("Vector not found");
                 return;
@@ -945,7 +999,7 @@ namespace MathAssignment
             double vectorX = vectorData[vectorIndex].vectorX;
             double vectorY = vectorData[vectorIndex].vectorY;
 
-            double length = Math.Sqrt((vectorX * vectorX) +(vectorY * vectorY));
+            double length = Math.Sqrt((vectorX * vectorX) + (vectorY * vectorY));
             Console.WriteLine($"Length of {newVectorName} = {length}");
         }
 
@@ -1034,7 +1088,7 @@ namespace MathAssignment
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-            if(codeArray.Length != 3)
+            if (codeArray.Length != 3)
             {
                 Console.WriteLine("USE: addvec firstVector secondVector");
                 return;
@@ -1046,7 +1100,7 @@ namespace MathAssignment
             int firstVectorIndex = -1;
             int secondVectorIndex = -1;
 
-            for(int i = 0; i < vectorCounter; i++)
+            for (int i = 0; i < vectorCounter; i++)
             {
                 if (vectorData[i].vectorName == firstVectorName)
                 {
@@ -1059,12 +1113,12 @@ namespace MathAssignment
                 }
             }
 
-            if(firstVectorIndex == -1)
+            if (firstVectorIndex == -1)
             {
                 Console.WriteLine($"{firstVectorName} was not found.");
                 return;
             }
-            if(secondVectorIndex == -1)
+            if (secondVectorIndex == -1)
             {
                 Console.WriteLine($"{secondVectorName} was not found.");
                 return;
@@ -1197,11 +1251,11 @@ namespace MathAssignment
             Console.WriteLine($"{vectorData[firstVectorIndex].vectorName} * {vectorData[secondVectorIndex].vectorName} = {resultX} + {resultY}");
             Console.WriteLine($"{vectorData[firstVectorIndex].vectorName} * {vectorData[secondVectorIndex].vectorName} = {dotProduct}");
 
-            if(dotProduct > 0)
+            if (dotProduct > 0)
             {
                 Console.WriteLine("The vectors point in a similar general direction.");
             }
-            else if(dotProduct == 0)
+            else if (dotProduct == 0)
             {
                 Console.WriteLine("The vectors are perpendicular.");
             }
@@ -1237,7 +1291,7 @@ namespace MathAssignment
                 Console.WriteLine("Scalar must be a valid number!");
                 return;
             }
-            
+
 
             string vectorName = codeArray[2];
 
@@ -1267,7 +1321,7 @@ namespace MathAssignment
         //END OF VECTORS
 
         //START OF NUMBER THEORY
-        
+
 
         /*
          * Method: CheckPrime
@@ -1300,23 +1354,23 @@ namespace MathAssignment
                 return;
             }
 
-            if(prime >= 10000)
+            if (prime >= 10000)
             {
                 Console.WriteLine("Prime testing only accepts numbers below 10000.");
                 return;
             }
 
             bool isPrime = true;
-            for(int i = 2; i * i <= prime; i++)
+            for (int i = 2; i * i <= prime; i++)
             {
-                if(prime % i == 0)
+                if (prime % i == 0)
                 {
                     isPrime = false;
                     break;
                 }
             }
 
-            if(isPrime == true)
+            if (isPrime == true)
             {
                 Console.WriteLine($"{prime} is a prime");
             }
@@ -1326,7 +1380,7 @@ namespace MathAssignment
             }
         }
 
-        
+
 
         /*
          * Method: CheckDivisibility
@@ -1340,7 +1394,7 @@ namespace MathAssignment
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-            if(codeArray.Length != 3)
+            if (codeArray.Length != 3)
             {
                 Console.WriteLine("USE: divisible number divisor");
                 return;
@@ -1355,19 +1409,19 @@ namespace MathAssignment
                 return;
             }
 
-            if(int.TryParse(codeArray[2], out divisor) == false)
+            if (int.TryParse(codeArray[2], out divisor) == false)
             {
                 Console.WriteLine("Divisible must be a valid number!");
                 return;
             }
 
-            if(divisor == 0)
+            if (divisor == 0)
             {
                 Console.WriteLine("Cannot divide by 0");
                 return;
             }
 
-            if(number % divisor == 0)
+            if (number % divisor == 0)
             {
                 Console.WriteLine($"{number} is divisible by {divisor}.");
             }
@@ -1378,7 +1432,7 @@ namespace MathAssignment
         }
 
 
-        
+
 
         /*
          * Method: CalculateCheckDigit
@@ -1392,8 +1446,8 @@ namespace MathAssignment
         {
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            
-            if(codeArray.Length != 2)
+
+            if (codeArray.Length != 2)
             {
                 Console.WriteLine("USE: numcheckdigit value");
                 return;
@@ -1401,9 +1455,9 @@ namespace MathAssignment
 
             string numericalString = codeArray[1];
 
-            foreach(char s in numericalString)
+            foreach (char s in numericalString)
             {
-                if(char.IsDigit(s) == false)
+                if (char.IsDigit(s) == false)
                 {
                     Console.WriteLine("All characters must be a valid number!");
                     return;
@@ -1414,7 +1468,7 @@ namespace MathAssignment
             int digit = 0;
             int checkDigit = 0;
             int weight = 0;
-            if(numericalString.Length == 9)
+            if (numericalString.Length == 9)
             {
                 weight = 10;
                 total = 0;
@@ -1424,10 +1478,10 @@ namespace MathAssignment
                     digit = numericalString[i] - '0';
                     total = total + digit * weight;
                     weight--;
-                    
+
                 }
                 checkDigit = (11 - (total % 11)) % 11;
-                if(checkDigit == 10)
+                if (checkDigit == 10)
                 {
                     Console.WriteLine(numericalString + "X");
                 }
@@ -1436,15 +1490,15 @@ namespace MathAssignment
                     Console.WriteLine(numericalString + checkDigit);
                 }
             }
-            else if(numericalString.Length == 11)
+            else if (numericalString.Length == 11)
             {
                 total = 0;
                 Console.WriteLine("UPC detected");
-                for(int i = 0; i < numericalString.Length; i++)
+                for (int i = 0; i < numericalString.Length; i++)
                 {
                     digit = numericalString[i] - '0';
 
-                    if(i % 2 == 0)
+                    if (i % 2 == 0)
                     {
                         total = total + digit * 3;
                     }
@@ -1483,7 +1537,7 @@ namespace MathAssignment
         }
 
 
-        
+
 
         /*
          * Method: GenerateRandomNumber
@@ -1497,7 +1551,7 @@ namespace MathAssignment
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             int xCounter = 1, xValue = 0, currentX = 0;
-            if(codeArray.Length != 5)
+            if (codeArray.Length != 5)
             {
                 Console.WriteLine("USE: numrand a X c m");
                 return;
@@ -1524,7 +1578,7 @@ namespace MathAssignment
                 return;
             }
 
-            if(m <= 0)
+            if (m <= 0)
             {
                 Console.WriteLine("The modulus must be greater than zero.");
                 return;
@@ -1564,7 +1618,7 @@ namespace MathAssignment
         }
 
 
-        
+
 
         /*
          * Method: CreateMatrix
@@ -1585,7 +1639,7 @@ namespace MathAssignment
                 return;
             }
 
-            if(matrixCounter >= matrixData.Length)
+            if (matrixCounter >= matrixData.Length)
             {
                 Console.WriteLine("Matrix storage is full");
                 return;
@@ -1593,7 +1647,7 @@ namespace MathAssignment
 
             string newMatrixName = codeArray[1];
 
-            for(int i = 0; i < matrixCounter; i++)
+            for (int i = 0; i < matrixCounter; i++)
             {
                 if (matrixData[i].matrixName == newMatrixName)
                 {
@@ -1636,7 +1690,7 @@ namespace MathAssignment
         }
 
 
-        
+
 
         /*
          * Method: AddMatrices
@@ -1650,7 +1704,7 @@ namespace MathAssignment
             string cleanedInput = userInput.Replace("(", " ").Replace(")", " ").Replace(",", " ");
             string[] codeArray = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-            if(codeArray.Length != 3)
+            if (codeArray.Length != 3)
             {
                 Console.WriteLine("USE: addmat firstMatrix secondMatrix");
                 return;
@@ -1690,7 +1744,7 @@ namespace MathAssignment
             double resultTopRight = matrixData[firstMatrixIndex].topRight + matrixData[secondMatrixIndex].topRight;
             double resultBottomLeft = matrixData[firstMatrixIndex].bottomLeft + matrixData[secondMatrixIndex].bottomLeft;
             double resultBottomRight = matrixData[firstMatrixIndex].bottomRight + matrixData[secondMatrixIndex].bottomRight;
-            
+
             //initial result
             Console.WriteLine($"{matrixData[firstMatrixIndex].matrixName} + {matrixData[secondMatrixIndex].matrixName} = ");
             Console.Write($"[{matrixData[firstMatrixIndex].topLeft} + {matrixData[secondMatrixIndex].topLeft}  ");
@@ -1734,7 +1788,7 @@ namespace MathAssignment
 
             int matrixIndex = -1;
             string matrixName = codeArray[2];
-            for(int i = 0; i < matrixCounter; i++)
+            for (int i = 0; i < matrixCounter; i++)
             {
                 if (matrixData[i].matrixName == matrixName)
                 {
@@ -1742,14 +1796,14 @@ namespace MathAssignment
                 }
             }
 
-            if(matrixIndex == -1)
+            if (matrixIndex == -1)
             {
                 Console.WriteLine("Matrix not found");
                 return;
             }
 
             double resultTopLeft = matrixData[matrixIndex].topLeft * scalar;
-            double resultTopRight= matrixData[matrixIndex].topRight * scalar;
+            double resultTopRight = matrixData[matrixIndex].topRight * scalar;
             double resultBottomLeft = matrixData[matrixIndex].bottomLeft * scalar;
             double resultBottomRight = matrixData[matrixIndex].bottomRight * scalar;
 
@@ -1910,7 +1964,7 @@ namespace MathAssignment
             double determinant = (matrixData[matrixIndex].topLeft * matrixData[matrixIndex].bottomRight)
                                 - (matrixData[matrixIndex].topRight * matrixData[matrixIndex].bottomLeft);
 
-            if(determinant == 0)
+            if (determinant == 0)
             {
                 Console.WriteLine("This matrix has no inverse");
                 return;
@@ -1957,13 +2011,13 @@ namespace MathAssignment
         //Process the calculator
         static void ProcessCommand(string userInput)
         {
-            if(userInput.StartsWith("decimal "))
-            {
-                BinaryToDecimal(userInput);
-            }
-            else if (userInput.StartsWith("binary "))
+            if (userInput.StartsWith("binary "))
             {
                 DecimalToBinary(userInput);
+            }
+            else if (userInput.StartsWith("decimal "))
+            {
+                BinaryToDecimal(userInput);
             }
             else if (userInput.StartsWith("invmat "))
             {
@@ -2079,7 +2133,7 @@ namespace MathAssignment
                 }
             }
 
-            
+
         }
 
     }
